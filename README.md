@@ -42,7 +42,10 @@ This addition to the slide-seq v2 pipeline will allow you to create a dataset th
   + no @PG lines
 
 # Barcode + UMI correction
-
+* Prep `generate_corrected_aligned_SAM.R` PARAMS section
+  + insert file paths
+  + choose parallelization parameters
+  + modify the readr parameters (colNamesR1, colTypesR1, colNamesR2, colTypesR2) to match your SAM files
 * Run `generate_corrected_aligned_SAM.R` with PARAMS section customized to your situation
 * NOTE: Because read 2 SAM only has successfully aligned reads, there is a discrepancy between the reads in read 1 SAM and read 2 SAM. As chunks of reads are getting read in for processing, we need to read in a bigger chunk of read 1 to ensure we have all read 2 reads in there. The parameter **r1cushion** is a coefficient for how much bigger the read 1 chunk is, with half of the extra cushion effectively on each side of the read 2 chunk. You can either:
   + leave as is
