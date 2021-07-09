@@ -37,7 +37,8 @@ This addition to the slide-seq v2 pipeline will allow you to create a dataset th
 * Create headerless read 2 SAM 
    + Only mapped reads
    + sorted by query name
-   + without ZP or ZS tags
+   + all reads must contain the same tags, either through omitting or adding non-empty strings for non-ubiquitous tags
+   + (NOTE: This is a pain, so finding a better way to pull in r2 reads is a priority)
 * Create header-only read 2 SAM
   + no @PG lines
 
