@@ -1,62 +1,69 @@
-# slide-seq_pipeline_modification
-Modification for the slide-seq v2 analysis pipeline to correct for deletions in bead oligos.
+# Modified slide-seq pipeline v2
+Modification for the slide-seq v2 analysis pipeline to correct for deletions in bead oligos. Now improved for user-friendliness, minimal computation, and maximized parallelism with the standard pipeline.
 
-# Required R packages
+Correspondence to: cbrewster@stowers.org
 
-NOTE: Some of these may not actually be required and are relics from development stage. Let me know if you find a missing or unnecessary one!
+## Required software
 
-* library(readr)
-* library(reader)
-* library(parallel)
-* library(doParallel)
-* library(data.table)
-* library(foreach)
-* library(feather)
-* library(parallelDist)
+* [**Samtools**](https://www.htslib.org/)
+* [**Picard**](https://broadinstitute.github.io/picard/)
+* [**R**](https://www.r-project.org/) with packages
+  + data.table
+  + doParallel
+  + dplyr
+  + feather
+  + foreach
+  + parallel
+  + parallelDist
+  + readr
+  + Rsamtools
+  + stringdist
+  + stringi
+  
+## Required data
 
-# Instructions
+### Puck info
 
-This addition to the slide-seq v2 pipeline will allow you to create a dataset that has (attempted to) correct for synthesis errors in the bead capture oligos. NOTE: If you're still waiting on data, you can still get the first step of **Prep data** done while you wait.
+This should be a `.txt` or `.csv` with bead sequences and spatial coordinates provided with the puck. 
 
-# Gather data
+### Unaligned BAM files
 
-* Combined (all lanes) unaligned read 1 SAM
-* Aligned read 2 SAM
-* Puck coordinates CSV
-* Read 1 pattern
+These should all be in the same directory and end in `unmapped.bam`. The last uninterrupted alphanumeric chunk of the directory path should be the puck name, i.e. `/n/core/Bioinformatics/tools/slideseq-tools/runs/HNCLCBGXH/libraries/2021-3-27_L45629/` will have the name **L45629**.
 
-  + JJJJJJJJTCTTCAGCGTTCCCGAGAJJJJJJJTCNNNNNNNNT for 44 nt read 1
-  + JJJJJJJJTCTTCAGCGTTCCCGAGAJJJJJJNNNNNNNVVT for 42 nt read 1
+### Aligned BAM file
 
-# Prep data
+This should be read 2 only and in the same directory as the unaligned BAMs and be named for the puck, i.e. `L45629.bam`.
 
-* Run `generate_barcode_mapping.R` with PARAMS section customized to your situation.
-  (I keep this separate from the main analysis, since the resulting feather file will work for other data from this puck, re-running the pipeline, etc.)
-* Create headerless read 1 SAM 
-   + sorted by query name
-* Create headerless read 2 SAM 
-   + Only mapped reads
-   + sorted by query name
-   + all reads must contain the same tags, either through omitting or adding non-empty strings for non-ubiquitous tags
-   + (NOTE: This is a pain, so finding a better way to pull in r2 reads is a priority)
-* Create header-only read 2 SAM
-  + no @PG lines
+This is only necessary for the last few step
 
-# Barcode + UMI correction
-* Prep `generate_corrected_aligned_SAM.R` PARAMS section
-  + insert file paths
-  + choose parallelization parameters
-  + modify the readr parameters (colNamesR1, colTypesR1, colNamesR2, colTypesR2) to match your SAM files
-* Run `generate_corrected_aligned_SAM.R` with PARAMS section customized to your situation
-* NOTE: Because read 2 SAM only has successfully aligned reads, there is a discrepancy between the reads in read 1 SAM and read 2 SAM. As chunks of reads are getting read in for processing, we need to read in a bigger chunk of read 1 to ensure we have all read 2 reads in there. The parameter **r1cushion** is a coefficient for how much bigger the read 1 chunk is, with half of the extra cushion effectively on each side of the read 2 chunk. You can either:
-  + leave as is
-  + decrease to improve runtime
-  + increase if you're getting messages about missing reads
-  + (You could also try using a read 2 SAM *not* filtered to mapped reads and setting this to 1. I haven't tried it, so no promises.)
+### Reference FASTA
 
-# Re-assemble data
+This should be the same FASTA
 
-* `cat` together no-@PG read 2 header with corrected SAM
-* Convert to BAM
-* NOTE: Barcode mapping has already been performed, do not repeat.
-* Use `DigitalExpression` to convert to DGE matrix, then proceed as usual
+## Process
+
+All steps are contained in `run_pipeline.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. Here's how it works:
+
+1. **SETUP** Open the `run_pipeline.sh` script and enter the necessary file and pathway info along with the number of cores to use. Setting `nCores` to 1 will simply run non-parallelized. If you want any finer control over distance metrics and whatnot, you will need to edit the PARAMETER section of the relevant R scripts.
+2. **PUCK BARCODES** This step only requires the puck data, and the results can be reused for any sequencing done on the same puck.
+  2.1 De-fork barcodes and create 1 Hamming or 1 deletion barcode matching lookup table using `generate_barcode_map.R`
+3. **UNALIGNED READS** This can be done while waiting on sequence alignment. It is the most time-consuming portion.
+  3.1 Merge unaligned BAMs and filter to read 1 only using Samtools.
+  3.2 Tag read 1 with bead (XC) and molecular (XM) barcodes using `tag_r1_with_XC_XM.R` This is the time-consuming part.
+  3.3 Convert resulting SAM to BAM with Samtools
+  3.4 Sort by queryname using Picard (yes, it is important to use Picard and not Samtools for this).
+  3.5 Extract a list of querynames to filter aligned reads.
+4. **ALIGNED READS** You're almost there!
+  4.1 Filter aligned reads using the queryname list from 3.5
+  4.2 Sort by queryname using Picard (I haven't tested whether this is strictly necessary, if you do please let me know the result!)
+5. **MERGE**
+  5.1 Merge the BAMs from 3.4 and 4.2 using Picard.
+
+You're done! Use the merged BAM to create a DGE matrix and get on to the downstream analysis.
+
+## Thanks!
+
+* For trying this out
+* For finding the inevitable bugs
+* And for letting me know how everything goes and what I can do to make this more useful :)
+* Correspondence to: cbrewster@stowers.org
