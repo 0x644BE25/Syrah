@@ -1,5 +1,5 @@
-# Syrah: Slide-seq pipeline augmentation
-Modification for the slide-seq v2 analysis pipeline to correct for deletions in bead oligos and bead forking. Now improved for user-friendliness, minimal computation, and maximized parallelism with the standard pipeline.
+# Syrah: Slide-seqV2 pipeline augmentation
+Modification for the slide-seqV2 analysis pipeline to correct for deletions in bead oligos and bead forking.
 
 Correspondence to: cbrewster@stowers.org
 
