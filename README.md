@@ -51,7 +51,7 @@ This should be the same FASTA that was used for the aligned BAM file.
 2. Run `bash Syrah.sh` (make sure `Syrah.sh` has [proper executable permissions](https://bash.cyberciti.biz/guide/Setting_up_permissions_on_a_script)). This is going to take **a while**, particularly when using few cores, so use of `nohup` is recommended.
 3. You're done! Use the merged BAM to create a DGE matrix and get on to the downstream analysis.
 
-NOTE: All steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. You can generate a barcode matching/deforking map before even using the puck, and the percentage of barcodes in forks is a rough indicator of puck quality (high % = crappier puck, decent range is __-__%) 
+NOTE: All analysis steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. You can generate a barcode matching/deforking map before even using the puck, and the percentage of barcodes in forks is a rough indicator of puck quality (high % = crappier puck, decent range is __-__%). You can also merge/filter/sort the read 1 files while waiting on alignment.
 
 ## Thanks!
 
