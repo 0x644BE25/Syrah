@@ -1,4 +1,4 @@
-# Syrah: slide-seq pipeline augmentation
+# Syrah: Slide-seq pipeline augmentation
 Modification for the slide-seq v2 analysis pipeline to correct for deletions in bead oligos and bead forking. Now improved for user-friendliness, minimal computation, and maximized parallelism with the standard pipeline.
 
 Correspondence to: cbrewster@stowers.org
@@ -39,25 +39,19 @@ This should be read 2 only and in the same directory as the unaligned BAMs.
 This should be the same FASTA that was used for the aligned BAM file.
 
 ## Process
+1. Open `MANIFOLD.txt` and fill out the following information:
+    * BAMdir: path to the directory holing the read 1 and read 2 BAM files
+    * puckFile: path to the puck info file
+    * writeDir: path to the directory where `Syrah` should write files
+    * batchName: a name for this batch of data
+    * vs: version of bead oligo used in this data (see https://www.biorxiv.org/content/biorxiv/early/2020/03/14/2020.03.12.989806/DC1/embed/media-1.pdf)
+    * nCores: max number of CPU cores to use
+    * maxLinkDist: maximum acceptable linker alignment distance, default=5
+    * keepIntermed: whether to retain intermediate files (generally for troubleshooting), default=false
+2. Run `bash Syrah.sh` (make sure `Syrah.sh` has [proper executable permissions](https://bash.cyberciti.biz/guide/Setting_up_permissions_on_a_script))
+3. You're done! Use the merged BAM to create a DGE matrix and get on to the downstream analysis.
 
-All steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. Here's how it works:
-
-1. **SETUP** Open the `run_pipeline.sh` script and enter the necessary file and pathway info along with the number of cores to use. Setting `nCores` to 1 will simply run non-parallelized. If you want any finer control over distance metrics and whatnot, you will need to edit the PARAMETER section of the relevant R scripts.
-2. **PUCK BARCODES** This step only requires the puck data, and the results can be reused for any sequencing done on the same puck.
-  2.1 De-fork barcodes and create 1 Hamming or 1 deletion barcode matching lookup table using `generate_barcode_map.R`
-3. **UNALIGNED READS** This can be done while waiting on sequence alignment. It is the most time-consuming portion.
-  3.1 Merge unaligned BAMs and filter to read 1 only using Samtools.
-  3.2 Tag read 1 with bead (XC) and molecular (XM) barcodes using `tag_r1_with_XC_XM.R` This is the time-consuming part.
-  3.3 Convert resulting SAM to BAM with Samtools
-  3.4 Sort by queryname using Picard (yes, it is important to use Picard and not Samtools for this).
-  3.5 Extract a list of querynames to filter aligned reads.
-4. **ALIGNED READS** You're almost there!
-  4.1 Filter aligned reads using the queryname list from 3.5
-  4.2 Sort by queryname using Picard (I haven't tested whether this is strictly necessary, if you do please let me know the result!)
-5. **MERGE**
-  5.1 Merge the BAMs from 3.4 and 4.2 using Picard.
-
-You're done! Use the merged BAM to create a DGE matrix and get on to the downstream analysis.
+NOTE: All steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. You can generate a barcode matching/deforking map before even using the puck, and the percentage of barcodes in forks is a rough indicator of puck quality (high % = crappier puck, decent range is __-__%) 
 
 ## Thanks!
 
