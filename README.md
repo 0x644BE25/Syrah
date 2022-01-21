@@ -32,17 +32,15 @@ These should all be in the same directory and end in `unmapped.bam`. The last un
 
 ### Aligned BAM file
 
-This should be read 2 only and in the same directory as the unaligned BAMs and be named for the puck, i.e. `L45629.bam`.
-
-This is only necessary for the last few step
+This should be read 2 only and in the same directory as the unaligned BAMs.
 
 ### Reference FASTA
 
-This should be the same FASTA
+This should be the same FASTA that was used for the aligned BAM file.
 
 ## Process
 
-All steps are contained in `run_pipeline.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. Here's how it works:
+All steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. Here's how it works:
 
 1. **SETUP** Open the `run_pipeline.sh` script and enter the necessary file and pathway info along with the number of cores to use. Setting `nCores` to 1 will simply run non-parallelized. If you want any finer control over distance metrics and whatnot, you will need to edit the PARAMETER section of the relevant R scripts.
 2. **PUCK BARCODES** This step only requires the puck data, and the results can be reused for any sequencing done on the same puck.
