@@ -44,7 +44,7 @@ This should be the same FASTA that was used for the aligned BAM file.
     * puckFile: path to the puck info file
     * writeDir: path to the directory where `Syrah` should write files
     * batchName: a name for this batch of data
-    * vs: version of bead oligo used in this data (see https://www.biorxiv.org/content/biorxiv/early/2020/03/14/2020.03.12.989806/DC1/embed/media-1.pdf)
+    * vs: version of bead oligo used in this data (see [Slide-seqV2 supplementary info](https://www.biorxiv.org/content/biorxiv/early/2020/03/14/2020.03.12.989806/DC1/embed/media-1.pdf))
     * nCores: max number of CPU cores to use
     * maxLinkDist: maximum acceptable linker alignment distance, default=5
     * keepIntermed: whether to retain intermediate files (generally for troubleshooting), default=false
