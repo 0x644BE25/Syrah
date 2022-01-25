@@ -6,7 +6,6 @@ Correspondence to: cbrewster@stowers.org
 ## Required software
 
 * [**Samtools**](https://www.htslib.org/)
-* [**Picard**](https://broadinstitute.github.io/picard/)
 * [**R**](https://www.r-project.org/) with packages
   + data.table
   + doParallel
