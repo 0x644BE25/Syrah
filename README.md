@@ -38,6 +38,7 @@ These should all be in the same directory and end in `unmapped.bam`.
 This should be read 2 only and in the same directory as the unaligned BAMs, ending in `.bam` and NOT `unmapped.bam`.
 
 ## Process
+0. If you want to do several batches, prepare several manifold files and pass them to `Syrah.sh` with something like `bash Syrah.sh manifold*txt` to loop over your batches. 
 1. Open `MANIFOLD.txt` and fill out the following information:
     * BAMdir: path to the directory holing the read 1 and read 2 BAM files
     * puckFile: path to the puck info file
@@ -47,7 +48,7 @@ This should be read 2 only and in the same directory as the unaligned BAMs, endi
     * nCores: max number of CPU cores to use
     * maxLinkDist: maximum acceptable linker alignment distance, default=5
     * keepIntermed: whether to retain intermediate files (generally for troubleshooting), default=true
-2. Run `bash Syrah.sh` (make sure `Syrah.sh` has [proper executable permissions](https://bash.cyberciti.biz/guide/Setting_up_permissions_on_a_script)). This is going to take **a while**, particularly when using few cores, so use of `nohup` is recommended.
+2. Run `bash Syrah.sh MANIFOLD.txt` (make sure `Syrah.sh` has [proper executable permissions](https://bash.cyberciti.biz/guide/Setting_up_permissions_on_a_script)). This is going to take **a while**, particularly when using few cores, so use of `nohup` is recommended.
 3. You're done! Use the merged BAM to create a DGE matrix and get on to the downstream analysis.
 
 NOTE: All analysis steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. You can generate a barcode matching/deforking map before even using the puck, and the percentage of barcodes in forks is a rough indicator of puck quality (high % = crappier puck, usable range is ~35%, okay range is closer to 20%). You can also merge/filter/sort the read 1 files while waiting on alignment.
