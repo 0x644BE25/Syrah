@@ -38,7 +38,7 @@ These should all be in the same directory and end in `unmapped.bam`.
 This should be read 2 only and in the same directory as the unaligned BAMs, ending in `.bam` and NOT `unmapped.bam`.
 
 ## Process
-0. If you want to do several batches, prepare several manifold files and pass them to `Syrah.sh` with something like `bash Syrah.sh manifold*txt` to loop over your batches. 
+0. If you want to do several batches, prepare several manifold files and pass them to `Syrah.sh` with something like `bash Syrah.sh manifold*txt` to loop over your batches. All files (intermediate or otherwise) are prefixed with the batch name, so MAKE SURE ALL BATCH NAMES ARE UNIQUE!
 1. Open `MANIFOLD.txt` and fill out the following information:
     * BAMdir: path to the directory holing the read 1 and read 2 BAM files
     * puckFile: path to the puck info file
