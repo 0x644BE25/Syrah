@@ -5,7 +5,7 @@ Correspondence to: cbrewster@stowers.org
 
 ## Before you begin
 
-You can now check your bead version, estimate your data's deletion rate, and quantify bead forking using the [queSyrah shinyApp](http://maple:3838/cb2350/queSyrah/) (only available on Stowers intranet duing testing phase). You'll need the puck barcode/coordinates file and a file with one read1 sequence per line, no headers. I recommend using 100K reads from one of your unaligned BAM files. The command `samtools view -f 77 <unaligned_BAM_file.bam> | cut -f 10 | head -n100000 > <your_output_file.txt>` should do the trick!
+You can now check your bead version, estimate your data's deletion rate, and quantify bead forking using the [queSyrah shinyApp](https://simrcompbio.shinyapps.io/queSyrah/). You'll need the puck barcode/coordinates file and a file with one read1 sequence per line, no headers. I recommend using 100K reads from one of your unaligned BAM files. The command `samtools view -f 77 <unaligned_BAM_file.bam> | cut -f 10 | head -n100000 > <your_output_file.txt>` should do the trick!
 
 ## Required software
 
@@ -44,14 +44,14 @@ This should be read 2 only and in the same directory as the unaligned BAMs, endi
     * puckFile: path to the puck info file
     * writeDir: path to the directory where `Syrah` should write files
     * batchName: a name for this batch of data
-    * vs: version of bead oligo used in this data (see [Slide-seqV2 supplementary info](https://www.biorxiv.org/content/biorxiv/early/2020/03/14/2020.03.12.989806/DC1/embed/media-1.pdf))
+    * vs: version of bead oligo used in this data, either "vs1" or "vs2 (see Stickels et. al [Slide-seqV2 paper](https://pubmed.ncbi.nlm.nih.gov/33288904/)). You can check this using [queSyrah](https://simrcompbio.shinyapps.io/queSyrah/).
     * nCores: max number of CPU cores to use
     * maxLinkDist: maximum acceptable linker alignment distance, default=5
     * keepIntermed: whether to retain intermediate files (generally for troubleshooting), default=true
 2. Run `bash Syrah.sh MANIFOLD.txt` (make sure `Syrah.sh` has [proper executable permissions](https://bash.cyberciti.biz/guide/Setting_up_permissions_on_a_script)). This is going to take **a while**, particularly when using few cores, so use of `nohup` is recommended.
 3. You're done! Use the merged BAM to create a DGE matrix and get on to the downstream analysis.
 
-NOTE: All analysis steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. You can generate a barcode matching/deforking map before even using the puck, and the percentage of barcodes in forks is a rough indicator of puck quality (high % = crappier puck, usable range is ~35%, okay range is closer to 20%). You can also merge/filter/sort the read 1 files while waiting on alignment.
+NOTE: All analysis steps are contained in `Syrah.sh`, but running individual commands within the script will allow you to perform different steps as the data becomes available. You can generate a barcode matching/deforking map before even using the puck, and the percentage of barcodes in forks is a rough indicator of puck quality (low % = higher quality puck, high % = lower quality puck, usable range is ~35%, okay range is closer to 20%). You can also merge/filter/sort the read 1 files while waiting on alignment.
 
 ## Thanks!
 
