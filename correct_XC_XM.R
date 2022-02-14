@@ -13,7 +13,6 @@
 library(parallel)
 library(data.table)
 library(feather)
-source('~/rutils.R')
 
 # ================= PARAMS ===========================
 
@@ -278,15 +277,3 @@ if (TRUE) {
 
 parallel::stopCluster(cl)
 cat('ALL DONE!\n')
-
-tests <- list()
-for (d in 0:8) {
-  lin <- paste0(substr(linker,1,2),substr(linker,(3+d),nchar(linker)))
-  for (s in 7:9) {
-    firstBC <- paste0(rep('J',(s-1)),collapse='')
-    rest <- 'JJJJJJJTCNNNNNNNNTTTTTTTTTTTTTTTTTT'
-    read <- substr(paste0(firstBC,linker,rest),1,43)
-    tests[[paste0(d,'d',s,'s')]] <- read
-  }
-}
-hm <- sapply(tests,getXC_XM_XX)
