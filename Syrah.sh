@@ -35,7 +35,6 @@ do
   echo "$r1BAMs"
   echo ""
   
-  n1Reads <- sum(sapply(r1Bams,function(x){ as.integer(system(paste0('samtools view -c ',bamDir,x),intern=TRUE)) }))
   # R1 = UNMAPPED, NEED R1 42 NT SEQUENCE FOR BC/UMI RE-MAPPING
   system(paste0('samtools merge ',newDir,batch,'_r1_merged.bam ',paste(paste0(bamDir,r1Bams),collapse=' ')))
   
