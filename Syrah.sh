@@ -73,7 +73,7 @@ do
   
   # ================= QNAME FILTER READ 1 ==============
   
-  echo "Filtering read 1 to by sequnce IDs present in read 2"
+  echo "Filtering read 1 to by sequence IDs present in read 2"
   samtools view -N "${writeDir}intermediate_files/${batchName}_r2_qnames.txt" "${writeDir}intermediate_files/${batchName}_r1_merged_filtered_sorted.bam" | cut -f1,10 > "${writeDir}intermediate_files/${batchName}_r1_qname_filtered_qname_seq_only.txt"
   
   # ================= MAKE CORRECTED BAM ===============
@@ -81,7 +81,7 @@ do
   echo "correcting bead barcode (XC) and UMI (XM)"
   Rscript ./correct_XC_XM.R $writeDir $batchName $vs $maxLinkDist $nCores
   
-  echo "geting read fates"
+  echo "getting read fates"
   cat ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.txt | cut -f 20 | sed 's/XX:Z://' > ${writeDir}${batchName}Syrah_test_fates.txt
   
   echo "filter by linker alignment quality"
