@@ -9,6 +9,7 @@
 
 # ================= IMPORTS ==========================
 
+library(data.table)
 library(feather)
 library(parallel)
 library(doParallel)
@@ -71,7 +72,13 @@ doBatch <- function(pairs,nts=c('A','T','G','C')) {
 
 # ================= DEFORKING ========================
 
-puck <- read.csv(puckFile,sep='\t',header=FALSE,col.names=c('barcode','x','y'))
+puck <- data.table::fread(puckFile)
+colnames(puck) <- c('barcode','x','y')
+if (nrow(puck)>0) {
+  cat("starting with",nrow(puck),"bead barcodes.\n")
+} else {
+  stop("puck file truncated or formatting not recognized")
+}
 
 xbinSize <- (max(puck$x)-min(puck$x))/nBins
 ybinSize <- (max(puck$y)-min(puck$y))/nBins
