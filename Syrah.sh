@@ -35,9 +35,6 @@ do
   echo "$r1BAMs"
   echo ""
   
-  # R1 = UNMAPPED, NEED R1 42 NT SEQUENCE FOR BC/UMI RE-MAPPING
-  system(paste0('samtools merge ',newDir,batch,'_r1_merged.bam ',paste(paste0(bamDir,r1Bams),collapse=' ')))
-  
   read1count=0
   for bam in $r1BAMs
   do
