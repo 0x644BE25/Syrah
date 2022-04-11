@@ -10,7 +10,7 @@ You can now check your bead version, estimate your data's deletion rate, and qua
 ## Required software
 
 * [**Samtools**](https://www.htslib.org/)
-* [**R**](https://www.r-project.org/) with packages
+* [**R**](https://www.r-project.org/) with the package [groundhog](https://cran.r-project.org/web/packages/groundhog/index.html) installed. Groundhog will then manage the rest of the required packages/versions for you, which include:
   + data.table
   + doParallel
   + dplyr
@@ -22,6 +22,7 @@ You can now check your bead version, estimate your data's deletion rate, and qua
   + Rsamtools
   + stringdist
   + stringi
+NOTE that groundhog will manage installation and loading of these packages to ensure version compatibility **without** affecting your currently installed versions of any packages. Learn more about Groundhog [here](https://groundhogr.com/).
   
 ## Required data
 
