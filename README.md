@@ -5,7 +5,7 @@ Correspondence to: cbrewster@stowers.org
 
 ## Before you begin
 
-You can now check your bead version, estimate your data's deletion rate, and quantify bead forking using the [queSyrah shinyApp](https://simrcompbio.shinyapps.io/queSyrah/). You'll need the puck barcode/coordinates file and a file with one read1 sequence per line, no headers. I recommend using 100K reads from one of your unaligned BAM files. The command `samtools view -f 77 <unaligned_BAM_file.bam> | cut -f 10 | head -n100000 > <your_output_file.txt>` should do the trick!
+You can now check your bead version, estimate your data's deletion rate, and quantify bead forking using the [queSyrah shinyApp](https://simrcompbio.shinyapps.io/queSyrah/). You'll need the puck barcode/coordinates file and a file with one read1 sequence per line, no headers. I recommend using 100K reads from one of your unaligned BAM files. The command `samtools view -f 77 <unaligned_BAM_file.bam> | head -n 100000 | cut -f 10  > <your_output_file.txt>` should do the trick!
 
 ## Required software
 
