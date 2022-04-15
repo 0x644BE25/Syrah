@@ -7,6 +7,7 @@ for manifestFile in "$@"
 do
   source "$manifestFile"
   echo ""
+  echo $(date)
   echo "Manifest ${i}: $manifestFile"
   echo "BAM directory: $BAMdir"
   echo "Puck file: $puckFile"
@@ -16,21 +17,22 @@ do
   echo "Max CPU to use: $nCores"
   echo "Minimum nUMI threshold: $minUMI"
   echo "Maximum linker alignment distance: $maxLinkDist"
-  echo ""
   i=$((i + 1))
   
   mkdir -p "$writeDir""intermediate_files"
   
-  
   # ================= CREATE BEAD BARCODE MAP ==========
   
+  echo ""
+  echo $(date)
   echo "Building barcode matching/de-forking map"
   Rscript ./create_bead_barcode_mapping.R $puckFile $writeDir $batchName $nCores
-  echo ""
   
   # ================= PREP READ 1 ======================
   
-  r1BAMs=$(ls $BAMdir*unmapped.bam)
+  echo ""
+  echo $(date)
+  r1BAMs=$(ls $BAMdir*.bam | grep "unmapped")
   echo "Merging read 1 BAM files:"
   echo "$r1BAMs"
   echo ""
@@ -38,11 +40,11 @@ do
   read1count=0
   for bam in $r1BAMs
   do
-    n=$(samtools view -c $bam)
+    n=$(samtools view -c "${bam}")
     read1count=$((read1count+n))
   done
   
-  samtools merge "${writeDir}intermediate_files/${batchName}_r1_merged.bam" $r1BAMs 
+  samtools merge -f "${writeDir}intermediate_files/${batchName}_r1_merged.bam" $r1BAMs 
   read1mergedCount=$(samtools view -c "${writeDir}intermediate_files/${batchName}_r1_merged.bam")
   if [ $read1mergedCount != $read1count ]; then
     echo "ERROR: expected $read1count reads in merged read 1 file, got $read1mergedCount instead."
@@ -56,8 +58,9 @@ do
   
   # ================ PREP READ 2 =======================
   
-  r2BAM=$(ls $BAMdir*bam | grep -v 'unmapped')
   echo ""
+  echo $(date)
+  r2BAM=$(ls $BAMdir*bam | grep -v 'unmapped')
   echo "Prepping read 2 BAM file:"
   echo "$r2BAM"
   echo ""
@@ -70,26 +73,33 @@ do
   
   # ================= QNAME FILTER READ 1 ==============
   
+  echo ""
+  echo $(date)
   echo "Filtering read 1 to by sequence IDs present in read 2"
   samtools view -N "${writeDir}intermediate_files/${batchName}_r2_qnames.txt" "${writeDir}intermediate_files/${batchName}_r1_merged_filtered_sorted.bam" | cut -f1,10 > "${writeDir}intermediate_files/${batchName}_r1_qname_filtered_qname_seq_only.txt"
   
   # ================= MAKE CORRECTED BAM ===============
-  
+   
+  echo ""
+  echo $(date)
   echo "correcting bead barcode (XC) and UMI (XM)"
   Rscript ./correct_XC_XM.R $writeDir $batchName $vs $maxLinkDist $nCores
   
-  echo "getting read fates"
-  cat ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.txt | cut -f 20 | sed 's/XX:Z://' > ${writeDir}${batchName}Syrah_test_fates.txt
-  
+  echo ""
+  echo $(date)
   echo "filter by linker alignment quality"
   linkRange=$(seq -s '' 0 $maxLinkDist)
   cat ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.txt | grep "XX:Z:[$linkRange]d[89]s" | grep -v "_noBC" > ${writeDir}intermediate_files/${batchName}_XC_XM_corrected_filtered.txt
   
+  echo ""
+  echo $(date)
   echo "add SAM headers"
   cat ${writeDir}intermediate_files/${batchName}_r2_header.bam ${writeDir}intermediate_files/${batchName}_XC_XM_corrected_filtered.txt > ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.sam
   echo "converting to BAM"
   samtools view -O bam -o ${writeDir}${batchName}_corrected.bam ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.sam
   
+  echo ""
+  echo $(date)
   echo "You're done!"
   echo "Just use your preferred method (Picard's DigitalExpression works well) to convert"
   echo "${writeDir}${batchName}_corrected.bam to a Digital Gene Expression Matrix"
