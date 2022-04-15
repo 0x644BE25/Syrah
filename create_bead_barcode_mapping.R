@@ -9,14 +9,9 @@
 
 # ================= IMPORTS ==========================
 
-library(data.table)
-library(feather)
-library(parallel)
-library(doParallel)
-library(foreach)
-library(parallelDist)
-#library(stringi)
-library(stringdist)
+library(groundhog)
+pkgs <- c('data.table','dplyr','feather','parallel','parallelDist','stringdist','stringi','doParallel','foreach')
+groundhog.library(pkgs,'2022-01-01')
 
 # ================= PARAMS ===========================
 
@@ -96,18 +91,18 @@ for (i in 1:nBins) {
     curr <- puck[puck$x>=xmin & puck$x<xmax & puck$y>=ymin & puck$y<ymax,]
     #cat(i,' X:',xmin,xmax,'   Y:',ymin,ymax,'   ',nrow(curr),'\n')
     if (nrow(curr)>=2) {
-      dists <- as.matrix(parallelDist::parDist(as.matrix(curr[,c('x','y')]),method="euclidean",threads=nCores))
+      dists <- as.matrix(parDist(as.matrix(curr[,c('x','y')]),method="euclidean",threads=nCores))
       dists[!upper.tri(dists)] <- NA
       paircoords <- which(dists<maxSlideDist,arr.ind=TRUE)
       if (nrow(paircoords)>0) {
         pairNames <- apply(paircoords,1,function(coords){ sort(curr$barcode[coords]) })
-        distHam <- stringdist::stringdist(pairNames[1,],pairNames[2,],method='hamming')
+        distHam <- stringdist(pairNames[1,],pairNames[2,],method='hamming')
         pairs <- cbind(pairs,pairNames[,distHam==1])
       }
     }
   }
 }
-pairs <- dplyr::distinct(data.frame(t(pairs)))
+pairs <- distinct(data.frame(t(pairs)))
 colnames(pairs) <- c('from','to')
 
 # deal with non-unique from barcodes
@@ -155,7 +150,7 @@ oneoff <- foreach(i=1:nChunks) %dopar% {
 }
 parallel::stopCluster(cl)
 
-oneoff <- data.table::rbindlist(oneoff)
+oneoff <- rbindlist(oneoff)
 good <- oneoff$from[!oneoff$from %in% pairs$from]
 tab <- table(good)
 good <- good[good %in% names(tab[tab==1])]
