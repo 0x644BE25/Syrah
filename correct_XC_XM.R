@@ -9,10 +9,10 @@
 
 # ================= IMPORTS ==========================
 
-#library(stringi)
-library(parallel)
-library(data.table)
-library(feather)
+
+library(groundhog)
+pkgs <- c('parallel','data.table','feather','stringi')
+groundhog.library(pkgs,'2022-01-01')
 
 # ================= PARAMS ===========================
 
@@ -34,6 +34,9 @@ batchSize <- 10^6
 options(expressions=5e5) # needed for big old barcode matching hash
 
 # linker matching parameters
+# NOTE: this uses the vs1 oligo pattern
+# but the relevant parts don't differ between vs1 and vs2,
+# only the UMI position
 pattern <- 'JJJJJJJJTCTTCAGCGTTCCCGAGAJJJJJJJTCNNNNNNNNT'
 UMIpos <- list('vs1'=c(36,43),'vs2'=c(33,39))[[vs]]
 linker <- stringi::stri_sub(pattern,9,26)
@@ -94,7 +97,6 @@ doDdels <- function(seq=linker,d) {
   #return(unique(c((unlist(sapply(0:min(maxDist-d,maxSubs),function(x){ doNdelMsub(seq,n=d,m=x) }))))))
   return(c((unlist(sapply(0:min(maxDistToCalc-d,maxSubs),function(x){ doNdelMsub(seq,n=d,m=x) })))))
 }
-
 
 # ================= BUILD HASHMAPS ===================
 cat('starting\n')
@@ -251,8 +253,10 @@ cl <- parallel::makeCluster(nCores,type="FORK")
 cat('cluster made\n')
 
 if (file.exists(samOut)) { if (file.rename(samOut,paste0(samOut,'.OLD'))) { cat(paste0('moved old tagged SAM to ',samOut,'.OLD\n')) } }
+if (file.exists(samOut)) { if (file.rename(fatesOut,paste0(fatesOut,'.OLD'))) { cat(paste0('moved old read fates to ',fatesOut,'.OLD\n')) } }
 
 if (TRUE) {
+  fates <- NULL
   nR1 <- as.numeric(stringi::stri_split_fixed(system(paste('wc -l',samR1),intern=TRUE),' ')[[1]][1])
   nR2 <- as.numeric(stringi::stri_split_fixed(system(paste('wc -l',samR2),intern=TRUE),' ')[[1]][1])
   if (nR1!=nR2) { stop('Number of lines in r1 and r2 files not equal. Ensure the same sequence IDs appear in both and that neither contain headers.')}
