@@ -1,0 +1,31 @@
+# path to directory with Syrah's code
+syrahDir=""
+
+# path to read 1 and read 2 FASTQ files
+read1fastq=""
+read2fastq=""
+
+# path to tab-delimited file of bead barcodes + coordinates
+puckFile=""
+
+# path to directory with STAR index and matching GTF
+STARindex=""
+gtf=""
+
+# directory to write files to
+writeDir=""
+
+# name for this dataset
+batchName=""
+
+# number of cores to use, if in doubt use 1
+nCores=1
+
+# maximum linker sequence matching distance, 5 recommended
+maxLinkerDistance=5
+
+# should Syrah generate a standard processed version of the data as well?
+doNonSyrah=true
+
+# should Syrah attempt to resume from the last step after a failed run?
+resume=false

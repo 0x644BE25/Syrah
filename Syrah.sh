@@ -1,107 +1,119 @@
 #!/bin/bash
 
-# ================= SETUP =======================
+######################################################
+# SYRAH
+#
+# GOAL: String together the various bits, checking to
+# see if we need to run all or can resume a previous 
+# incomplete run.
+######################################################
+
+set -e
+
 echo "SYRAH PROCESSING LOG"
 i=1;
 for manifestFile in "$@"
 do
+  resume=false
   source "$manifestFile"
   echo ""
   echo $(date)
+  if ! [[ $syrahDir == */ ]] ; then
+    syrahDir="${syrahDir}/"
+  fi
   echo "Manifest ${i}: $manifestFile"
-  echo "BAM directory: $BAMdir"
+  echo "Syrah code directory: $syrahDir"
+  echo "Read 1 FASTQ: $read1fastq"
+  echo "Read 2 FASTQ: $read2fastq"
   echo "Puck file: $puckFile"
+  if ! [[ $writeDir == */ ]] ; then
+    writeDir="${writeDir}/"
+  fi
   echo "Write directory: $writeDir"
   echo "Batch name: $batchName"
-  echo "Read 1 oligo version: $vs"
+  echo "Read 1 oligo version: $read1format"
   echo "Max CPU to use: $nCores"
   echo "Minimum nUMI threshold: $minUMI"
-  echo "Maximum linker alignment distance: $maxLinkDist"
+  echo "Maximum linker alignment distance: $maxLinkerDistance"
   i=$((i + 1))
   
-  mkdir -p "$writeDir""intermediate_files"
+  cd "${writeDir}"
   
-  # ================= CREATE BEAD BARCODE MAP ==========
-  
-  echo ""
-  echo $(date)
-  echo "Building barcode matching/de-forking map"
-  Rscript ./create_bead_barcode_mapping.R $puckFile $writeDir $batchName $nCores
-  
-  # ================= PREP READ 1 ======================
-  
-  echo ""
-  echo $(date)
-  r1BAMs=$(ls $BAMdir*.bam | grep "unmapped")
-  echo "Merging read 1 BAM files:"
-  echo "$r1BAMs"
-  echo ""
-  
-  read1count=0
-  for bam in $r1BAMs
-  do
-    n=$(samtools view -c "${bam}")
-    read1count=$((read1count+n))
-  done
-  
-  samtools merge -f "${writeDir}intermediate_files/${batchName}_r1_merged.bam" $r1BAMs 
-  read1mergedCount=$(samtools view -c "${writeDir}intermediate_files/${batchName}_r1_merged.bam")
-  if [ $read1mergedCount != $read1count ]; then
-    echo "ERROR: expected $read1count reads in merged read 1 file, got $read1mergedCount instead."
-    echo "This happens sometimes, I'm not sure why. Try this step again."
+  # DETERMINE READ 1 VERSION
+  if [ ! -f "${writeDir}${batchName}_r1_version.txt" ] || [ "$resume" = false ]; then
+    resume=false
+    Rscript "${syrahDir}determine_version.R" "${manifestFile}"
+    echo "Nucleotide frequency plot at ${writeDir}${batchName}_estimated_read_1_nucleotide_frequencies.png"
   else
-    echo "Read 1 merged, $read1mergedCount total reads."
+    echo ""
+    echo "Looks like read1 version already detected! Moving on..."
+    echo "  (Delete files from previous runs or use 'resume=false' to change this behavior)"
   fi
-  samtools view -f 77 -o "${writeDir}intermediate_files/${batchName}_r1_merged_filtered.bam" "${writeDir}intermediate_files/${batchName}_r1_merged.bam"
-  samtools sort -n -o "${writeDir}intermediate_files/${batchName}_r1_merged_filtered_sorted.bam" "${writeDir}intermediate_files/${batchName}_r1_merged_filtered.bam"
-  echo "Read 1 filtered and sorted"
   
-  # ================ PREP READ 2 =======================
+  # DEFORK MAPPING
+  if [ ! -f "${writeDir}${batchName}_defork_groups.txt" ] || [ "$resume" = false ]; then
+    resume=false
+    Rscript "${syrahDir}create_defork_map.R" "${manifestFile}"
+  else
+    echo ""
+    echo "Looks like defork groups were already found! Moving on..."
+    echo "  (Delete files from previous runs or use 'resume=false' to change this behavior)"
+  fi
+
+  # BARCODE MATCHING + CORRECTION WHITELIST
+  if [ ! -f "${writeDir}${batchName}_barcode_whitelist.txt"  ] || [ "$resume" = false ]; then
+    resume=false
+    Rscript "${syrahDir}generate_bead_barcode_whitelist.R" "${manifestFile}"
+  else
+    echo ""
+    echo "Looks like bead barcode whitelists have already been generated! Moving on..."
+    echo "  (Delete files from previous runs or use 'resume=false' to change this behavior)"
+  fi
   
-  echo ""
-  echo $(date)
-  r2BAM=$(ls $BAMdir*bam | grep -v 'unmapped')
-  echo "Prepping read 2 BAM file:"
-  echo "$r2BAM"
-  echo ""
+
+  # READ BARCODE EXTRACTION + CORRECTION
+  if [ ! -f "${writeDir}${batchName}_r2_barcode_tagged.fastq" ] || [ "$resume" = false ]; then
+    resume=false
+    Rscript "${syrahDir}extract_bead_barcodes.R" "${manifestFile}"
+    if [ "$doNonSyrah" = true ]; then
+      bash "${syrahDir}extract_bead_barcodes_nonSyrah.sh" "${manifestFile}"
+    fi
+  else
+    echo ""
+    echo "Looks like we already added barcodes to read 2! Moving on..."
+    echo "  (Delete files from previous runs or use 'resume=false' to change this behavior)"
+  fi
   
-  samtools view -h -F 4 -O bam -o "${writeDir}intermediate_files/${batchName}_r2_filtered.bam" $r2BAM
-  samtools sort -n -O bam -o "${writeDir}intermediate_files/${batchName}_r2_filtered_sorted.bam" "${writeDir}intermediate_files/${batchName}_r2_filtered.bam"
-  samtools view -H "${writeDir}intermediate_files/${batchName}_r2_filtered_sorted.bam" | grep -v ^@PG > "${writeDir}intermediate_files/${batchName}_r2_header.bam"
-  samtools view "${writeDir}intermediate_files/${batchName}_r2_filtered_sorted.bam" > "${writeDir}intermediate_files/${batchName}_r2_reads_only.sam" 
-  cat "${writeDir}intermediate_files/${batchName}_r2_reads_only.sam" | cut -f1 > "${writeDir}intermediate_files/${batchName}_r2_qnames.txt" 
+  # STAR ALIGNMENT
+  if [ ! -f "${writeDir}${batchName}_Aligned.sortedByCoord.out.bam" ] || [ "$resume" = false ]; then
+    resume=false
+    bash "${syrahDir}STAR_alignment.sh" "${manifestFile}"
+  else
+    echo ""
+    echo "Looks like you've already STAR aligned! Moving on..."
+    echo "  (Delete files from previous runs or use 'resume=false' to change this behavior)"
+  fi
   
-  # ================= QNAME FILTER READ 1 ==============
-  
-  echo ""
-  echo $(date)
-  echo "Filtering read 1 to by sequence IDs present in read 2"
-  samtools view -N "${writeDir}intermediate_files/${batchName}_r2_qnames.txt" "${writeDir}intermediate_files/${batchName}_r1_merged_filtered_sorted.bam" | cut -f1,10 > "${writeDir}intermediate_files/${batchName}_r1_qname_filtered_qname_seq_only.txt"
-  
-  # ================= MAKE CORRECTED BAM ===============
-   
-  echo ""
-  echo $(date)
-  echo "correcting bead barcode (XC) and UMI (XM)"
-  Rscript ./correct_XC_XM.R $writeDir $batchName $vs $maxLinkDist $nCores
-  
-  echo ""
-  echo $(date)
-  echo "filter by linker alignment quality"
-  linkRange=$(seq -s '' 0 $maxLinkDist)
-  cat ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.txt | grep "XX:Z:[$linkRange]d[89]s" | grep -v "_noBC" > ${writeDir}intermediate_files/${batchName}_XC_XM_corrected_filtered.txt
-  
-  echo ""
-  echo $(date)
-  echo "add SAM headers"
-  cat ${writeDir}intermediate_files/${batchName}_r2_header.bam ${writeDir}intermediate_files/${batchName}_XC_XM_corrected_filtered.txt > ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.sam
-  echo "converting to BAM"
-  samtools view -O bam -o ${writeDir}${batchName}_corrected.bam ${writeDir}intermediate_files/${batchName}_XC_XM_corrected.sam
-  
-  echo ""
-  echo $(date)
-  echo "You're done!"
-  echo "Just use your preferred method (Picard's DigitalExpression works well) to convert"
-  echo "${writeDir}${batchName}_corrected.bam to a Digital Gene Expression Matrix"
-  echo "and get on to the fun part!"
+  # READ QUANTIFICATION
+  if [ ! -f "${writeDir}${batchName}_counts.tsv.gz" ] || [ "$resume" = false ]; then
+    resume=false
+    bash "${syrahDir}quantify_counts.sh" "${manifestFile}"
+    Rscript "${syrahDir}graphical_outputs.R" "${manifestFile}"
+    echo "${batchName} ALL DONE! Find your counts matrix at ${writeDir}${batchName}_counts.tsv.gz"
+    echo "and a summary of results at ${writeDir}{batchName}_Syrah_results_summary.pdf"
+    if [ "$doNonSyrah" = true ]; then
+      echo "and for the non-Syrah version at ${writeDir}{batchName}_nonSyrah_results_summary.pdf"
+    fi
+  else
+    echo ""
+    echo "Looks like you've already made your count matrices, so this run has done nothing."
+    echo ""
+    echo "     (what are we even doing here)"
+    echo ""
+    echo "Unless this was your intended behavior, you should delete the files from old runs"
+    echo "or make sure to set 'resume=false' in the manifest."
+  fi
+
+ i=$(($i+1))
+ 
 done
