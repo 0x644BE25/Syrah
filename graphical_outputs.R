@@ -63,9 +63,9 @@ blendNcolors <- function(colors,ratio) {
 
 # ================= INIT DATA ========================
 
-vs <- readLines(paste0(writeDir,batchName,'_r1_version.txt'))
-patt <- readLines(paste0(writeDir,batchName,'_r1_pattern.txt'))
-freqs <- read.csv(paste0(writeDir,batchName,'_estimated_read_1_nucleotide_frequencies.csv'),row.names=1)
+vs <- readLines(paste0(writeDir,'intermediate_files/',batchName,'_r1_version.txt'))
+patt <- readLines(paste0(writeDir,'intermediate_files/',batchName,'_r1_pattern.txt'))
+freqs <- read.csv(paste0(writeDir,'intermediate_files/',batchName,'_estimated_read_1_nucleotide_frequencies.csv'),row.names=1)
 puck <- read.delim(puckFile,row.names=1,header=FALSE)
 syrah <- read.delim(paste0(writeDir,batchName,"_counts.tsv.gz"),row.names=1)
 
@@ -77,7 +77,7 @@ chars <- c('X'='','C'='B','N'='U')[strsplit(patt,'')[[1]]]
 colnames(freqs) <- paste0(chars,'\n',1:ncol(freqs))
 
 # ================= SYRAH VERSION ========================
-if (TRUE) {
+
 df <- data.frame(row.names=colnames(syrah),
                  nGenes=colSums(syrah>0),
                  nUMI=colSums(syrah),
@@ -93,7 +93,7 @@ df.min25$col <- sapply(df.min25$colNum,\(x){ blendNcolors(colors=c('#ccffff','#0
 nGenes <- sum(rowSums(syrah)>0)
 nGenes.min25 <- sum(rowSums(syrah[,colSums(syrah>=25)])>0)
 
-try({ dev.off() },silent=TRUE)
+try({ shh <- dev.off() },silent=TRUE)
 
 pdf(paste0(writeDir,batchName,'_Syrah_results_summary.pdf'),width=8.5,height=11)
 nf <- layout( matrix(c(1,1,2,4,3,4,5,7,6,7), ncol=2, byrow=TRUE))
@@ -162,8 +162,8 @@ abline(v=mean(log10(df.min25$nGene)),lty='dashed')
 plot(df.min25$x~df.min25$y,col=df.min25$col,
      pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=25 UMIs)',asp=1)
 
-dev.off()
-}
+shh <- dev.off()
+
 # ================= NON-SYRAH VERSION ================
 
 
@@ -183,7 +183,7 @@ if (doNonSyrah) {
   nGenes <- sum(rowSums(std)>0)
   nGenes.min25 <- sum(rowSums(std[,colSums(std>=25)])>0)
   
-  try({ dev.off() },silent=TRUE)
+  try({ shh <- dev.off() },silent=TRUE)
   
   pdf(paste0(writeDir,batchName,'_nonSyrah_results_summary.pdf'),width=8.5,height=11)
   nf <- layout( matrix(c(1,1,2,4,3,4,5,7,6,7), ncol=2, byrow=TRUE))
@@ -251,6 +251,6 @@ if (doNonSyrah) {
   plot(df.min25$x~df.min25$y,col=df.min25$col,
        pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=25 UMIs)',asp=1)
   
-  dev.off()
+  shh <- dev.off()
   
 }
