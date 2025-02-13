@@ -1,7 +1,7 @@
 Syrah: A standalone analysis pipeline to maximize Slide-seq & Curio Seeker data
 ==============
 
-**Author:** [Carolyn Brewster](mailto:cbrewster@stowers.org){.email}
+**Author:** [Carolyn Brewster](mailto:cbrewster@stowers.org)
 
 preprint info and link here, maybe one summary figure
 
@@ -147,4 +147,4 @@ And that's -- you're done! You'll have a gene expression matrix called `batchNam
 
 Thanks for trying out Syrah :)
 
-This is an alpha release and there **WILL** be bugs! Don't hesitate to contact [Carolyn](mailto:cbrewster@stowers.org){.email} (or through GitHub) if you have any questions or issues.
+This is an alpha release and there **WILL** be bugs! Don't hesitate to contact [Carolyn](mailto:cbrewster@stowers.org) (or through GitHub) if you have any questions or issues.
