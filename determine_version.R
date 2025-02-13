@@ -34,7 +34,7 @@ r1s <- r1s[seq(2,400000,by=4)]
 r1s <- do.call(rbind,strsplit(r1s,''))
 freqs <- apply(r1s,2,function(x){ table(factor(x,levels=nts))/length(x) })
 colnames(freqs) <- 1:ncol(freqs)
-write.csv(freqs,paste0(writeDir,batchName,'_estimated_read_1_nucleotide_frequencies.csv'),row.names=TRUE)
+write.csv(freqs,paste0(writeDir,'intermediate_files/',batchName,'_estimated_read_1_nucleotide_frequencies.csv'),row.names=TRUE)
 
 # VERSION INFO
 if (freqs['T',34]>.3 & freqs['C',35]>.3) {
@@ -44,14 +44,14 @@ if (freqs['T',34]>.3 & freqs['C',35]>.3) {
 } else {
   vs <- 'noTC' 
 }
-writeLines(vs,paste0(writeDir,batchName,'_r1_version.txt'))
+writeLines(vs,paste0(writeDir,'intermediate_files/',batchName,'_r1_version.txt'))
 
 # NON-SYRAH BARCODE/UMI EXTRACTION PATTERN
 link2len <- c('yesTC'=3,'noTC'=1,'curio'=1)[vs]
 umilen <- c('yesTC'=8,'noTC'=8,'curio'=6)[vs]
 patt <- c(rep('C',8),rep('X',18),rep('C',6),rep('X',link2len),rep('N',umilen),rep('X',99))
 patt <- paste0(patt[1:ncol(r1s)],collapse='')
-writeLines(patt,paste0(writeDir,batchName,'_r1_pattern.txt'))
+writeLines(patt,paste0(writeDir,'intermediate_files/',batchName,'_r1_pattern.txt'))
 
 # ================= PLOTTING =========================
 
@@ -64,7 +64,7 @@ spc <- spaces[[vs]][1:ncol(freqs)]
 chars <- c('X'='','C'='B','N'='U')[strsplit(patt,'')[[1]]]
 colnames(freqs) <- paste0(chars,'\n',colnames(freqs))
 
-png(filename=paste0(writeDir,batchName,'_estimated_read_1_nucleotide_frequencies.png'),width=(2.5+(.3*ncol(freqs))),height=6,units='in',res=100)
+png(filename=paste0(writeDir,'intermediate_files/',batchName,'_estimated_read_1_nucleotide_frequencies.png'),width=(2.5+(.3*ncol(freqs))),height=6,units='in',res=100)
 barplot(as.matrix(freqs[c('T','G','C','A','N'),]), 
         col=c('#ff585f','#ffcb05','#73ab1c','#496efd','#CCCCCC'),
         border=NA,
@@ -77,4 +77,4 @@ barplot(as.matrix(freqs[c('T','G','C','A','N'),]),
         main=paste(batchName,'estimated read 1 nucleotide frequency by position'),
         xlab="5' ----------- nt position ---------> 3'")
 
-dev.off()
+shh <- dev.off()
