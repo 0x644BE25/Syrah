@@ -60,18 +60,18 @@ do1sub <- function(seq) {
 
 puck <- read.delim(puckFile,header=FALSE)
 colnames(puck) <- c('barcode','x','y')
-defork <- readLines(paste0(writeDir,batchName,'_defork_groups.txt'))
+dedup <- readLines(paste0(writeDir,'intermediate_files/',batchName,'_deduplication_map.txt'))
 
 
 # ================= SYRAH VERSION ====================
 
 # GENERATE MATCHES 
 cl <- makeCluster(nCores,type='FORK')
-matchBCs <- parLapply(cl,defork,function(x){
+matchBCs <- parLapply(cl,dedup,function(x){
   bcs <- strsplit(x,',')[[1]]
   d1 <- unique(unlist(lapply(bcs,do1delOR1sub)))
   d1 <- setdiff(d1,puck$barcode)
-  return(data.frame(defork=x,match=d1))
+  return(data.frame(dedup=x,match=d1))
 })
 stopCluster(cl)
 matchBCs <- do.call(rbind,matchBCs)
@@ -80,19 +80,19 @@ matchBCs <- do.call(rbind,matchBCs)
 dups <- matchBCs$match[duplicated(matchBCs$match)]
 matchBCs <- matchBCs[!matchBCs$match %in% dups,]
 
-# COMBINE INTO CORRECT + DEFORK ROWS
+# COMBINE INTO CORRECT + dedup ROWS
 cl <- makeCluster(nCores,type='FORK')
-rows <- parLapply(cl,defork,function(x){
-  froms <- matchBCs[matchBCs$defork==x,'match']
+rows <- parLapply(cl,dedup,function(x){
+  froms <- matchBCs[matchBCs$dedup==x,'match']
   root <- strsplit(x,',')[[1]][1]
   return(paste0(root,'\t',x,',',paste(froms,collapse=',')))
 })
 stopCluster(cl)
 
 # WRITE FILE
-fileName <- paste0(writeDir,batchName,'_barcode_whitelist.txt')
+fileName <- paste0(writeDir,'intermediate_files/',batchName,'_barcode_whitelist.txt')
 writeLines(unlist(rows),fileName)
-cat('Syrah barcode correction + deforking whitelist written to',fileName,'\n')
+cat('Syrah barcode correction + deduping whitelist written to',fileName,'\n')
 
 
 # ================= NON-SYRAH VERSION ================
@@ -120,7 +120,7 @@ if (doNonSyrah) {
   stopCluster(cl)
   
   # WRITE FILE
-  fileName <- paste0(writeDir,batchName,'_barcode_whitelist_nonSyrah.txt')
+  fileName <- paste0(writeDir,'intermediate_files/',batchName,'_barcode_whitelist_nonSyrah.txt')
   writeLines(unlist(rows),fileName)
   cat('Non-Syrah barcode correction whitelist written to',fileName,'\n')
 }
