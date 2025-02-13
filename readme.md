@@ -1,8 +1,3 @@
----
-output:
-  html_document: default
-  pdf_document: default
----
 # Syrah: an analysis pipeline to maximize Slide-seq & Curio Seeker data
 
 preprint info and link here, maybe one summary figure
