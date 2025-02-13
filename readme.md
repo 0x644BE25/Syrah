@@ -88,7 +88,7 @@ All you need to do is pass your manifest file(s) to `Syrah.sh`:
 
 I promise it's not as daunting as this schematic makes it look! You just run each command in order, passing your manifest file as the only parameter each time.
 
-![Syrah schematic.](https://github.com/0x644BE25/Syrah/blob/main/Syrah_schematic.png?raw=true "Syrah schematic")
+![Syrah schematic.](https://github.com/0x644BE25/Syrah/blob/main/simple_Syrah_schematic.png?raw=true "Syrah schematic")
 
 **SINGULARITY USERS:** The best way to run Syrah manually is to start a [Singluarity shell](https://docs.sylabs.io/guides/3.1/user-guide/cli/singularity_shell.html) and then run the commands in it, so start with `singularity shell /path/to/Syrah-v2.0.0.sif` using [`--bind`](https://apptainer.org/user-docs/master/quick_start.html#working-with-files) as needed to ensure access to files not in your home directory. To end the Singularity shell when you're all finished, use `exit`.
 
