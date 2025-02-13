@@ -21,7 +21,8 @@ Singularity is a container platform which allows you to build an encapsulated so
 - [MacOS installation instructions](https://docs.sylabs.io/guides/3.5/admin-guide/installation.html#macOS)
 - [Windows installation instructions](https://docs.sylabs.io/guides/3.5/admin-guide/installation.html#windows) are a bit more involved due to the need for a virtual machine.
 
-Once Singularity is installed and working, download the pre-built container from [the Syrah v2.0.0-alpha release](https://github.com/0x644BE25/Syrah/archive/refs/tags/v2.0.0-alpha.sif)
+Once Singularity is installed and working, download the pre-built container from [the Syrah v2.0.0-alpha release](https://github.com/0x644BE25/Syrah/releases/download/v2.0.0-alpha/Syrah-v2.0.0.sif)
+
 
 **NOTE:** Scripts you run using Singularity will always have access to files in your user folder, but if you are reading or writing data in a different folder, you may need to [enable access to it using the  `--bind` command](https://apptainer.org/user-docs/master/quick_start.html#working-with-files).
 
