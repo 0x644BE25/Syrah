@@ -44,6 +44,8 @@ Once the pre-requisites are installed, you're basically done. Just [clone](https
 
 ## 2. Input files
 
+**NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz  You'll simply need a mouse genome and GTF for alignment (but not if you just care about `Syrah_minimal.sh`).
+
 We've tried to choose a minimal set of starting data that uses the most frequently published "raw" files. However, Syrah's barcode correction step does require a read 1 FASTQ that has not yet had the barcode extracted. If your read 1 FASTQ has reads of 42-44 nt long, you should be good to go. The total input data is:
 
 - **Read 1 and read 2 FASTQ files:** These can be either zipped (.fastq.gz) or unzipped (.fastq). Read 1 and read 2 FASTQs must be in the same order, but this is generally how they are made. If you have multiple lanes in your sample, make sure to concatenate all the read 1 FASTQs together and all the read 2 FASTQs together so that you begin with two FASTQ files. If you are starting with BCL files instead, convert them to FASTQs with something like Illumina's [blc2fastq](https://support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl2fastq/bcl2fastq2-v2-20-software-guide-15051736-03.pdf).
