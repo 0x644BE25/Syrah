@@ -98,53 +98,63 @@ The commands to run each step of the Syrah pipeline in order are
 
 -   1 &ensp; **`Rscript /path/to/syrahDir/determine_version.R /path/to/my_manifest.txt`**
 
-    <details>This step uses the first 100K read 1 sequences to estimate the nucleotide frequency at each position along read 1. Syrah determines which version of capture oligonculeotide was used on the beads on the puck in order to find the expected positions of the both parts of the bead barcode as well as the UMI. There will be a plot in the `intermediate_files` directory showing the nucleotide frequencies and barcode/UMI positions (`B`=bead barcode, `U`=UMI). A nucleotide frequency barplot with colors indicating A, C, G, or T. The x-axis indicates position along read 1, from 5' on the left to 3' on the right, with letters indicating the position of the bead barcode (B) and UMI (U).\
-       \
+    <details>This step uses the first 100K read 1 sequences to estimate the nucleotide frequency at each position along read 1. Syrah determines which version of capture oligonculeotide was used on the beads on the puck in order to find the expected positions of the both parts of the bead barcode as well as the UMI. There will be a plot in the `intermediate_files` directory showing the nucleotide frequencies and barcode/UMI positions (`B`=bead barcode, `U`=UMI). A nucleotide frequency barplot with colors indicating A, C, G, or T. The x-axis indicates position along read 1, from 5' on the left to 3' on the right, with letters indicating the position of the bead barcode (B) and UMI (U).
+       &nbsp; 
+       
     **KEY OUTPUT FILES:** `estimated_read_1_nucleotide_frequencies.csv`, `r1_pattern.txt`, `r1_version.txt`</details>
 
 -   2 &ensp; **`Rscript /path/to/syrahDir/create_bead_deduplication_map.R /path/to/my_manifest.txt`**
 
-    <details>This step uses the bead coordinates file to find virtually duplicated beads. These "beads" are less than one bead diameter apart in x,y space and have barcodes that differ by one nucleotide substitution. The groups of virtually duplicated beads will be used by `generate_bead_whitelist.R` to "de-duplicate" the beads so that all reads from that group are assigned to a single bead.\
-    \
+    <details>This step uses the bead coordinates file to find virtually duplicated beads. These "beads" are less than one bead diameter apart in x,y space and have barcodes that differ by one nucleotide substitution. The groups of virtually duplicated beads will be used by `generate_bead_whitelist.R` to "de-duplicate" the beads so that all reads from that group are assigned to a single bead.
+    &nbsp; 
+       
     **KEY OUTPUT FILES:** `deduplication_map.txt`</details>
 
 -   3 &ensp; **`Rscript /path/to/syrahDir/generate_bead_barcode_whitelist.R /path/to/my_manifest.txt`**
 
-    <details>This step uses the bead coordinates file and the deduplication map from the previous step to generate valid matches for each bead barcode. Valid matches may have one nucleotide deletion or one substitution. If a match has a deletion that occurs in the first part of the barcode, it will be 13 nucleotides long instead of the usual 14. If `doNonSyarh=true`, a second whitelist will be made without bead deduplication and only allowing one nucleotide substitution (no deletions). This will be used for barcode error correction during the barcode extraction step.\
-    \
+    <details>This step uses the bead coordinates file and the deduplication map from the previous step to generate valid matches for each bead barcode. Valid matches may have one nucleotide deletion or one substitution. If a match has a deletion that occurs in the first part of the barcode, it will be 13 nucleotides long instead of the usual 14. If `doNonSyarh=true`, a second whitelist will be made without bead deduplication and only allowing one nucleotide substitution (no deletions). This will be used for barcode error correction during the barcode extraction step.
+    &nbsp; 
+       
     **KEY OUTPUT FILES:** `barcode_whitelist.txt`, `barcode_whitelist_nonSyrah.txt` (if `doNonSyrah=true`)</details>
 
 -   4 &ensp; **`Rscript /path/to/syrahDir/extract_bead_barcodes.R /path/to/my_manifest.txt`**
 
-    <details>This step takes barcode and UMI sequences from read 1 and appends them to the sequence ID in read 2. Syrah uses fuzzy matching to find the location of the invariant linker sequence between barcode parts 1 and 2 and uses this to determine the correct location of the barcode and UMI. The barcode sequence is then matched agains the whitelist from the previous step to correct and deduplicate the bead barcodes before appending the barcode and UMI to the sequence ID of the corresponding read 2. Reads lacking a high-confidnce linker position or valid bead barcode are discarded.\
-    \
-    If `doNonSyrah=true` the non-Syrah version always takes the barcode and UMI from the canonically expected positions and matches agains the non-Syrah whitelist. It also appends the barcode and UMI to the read 2 sequence ID and discards reads without a valid barcode. \
-    \
+    <details>This step takes barcode and UMI sequences from read 1 and appends them to the sequence ID in read 2. Syrah uses fuzzy matching to find the location of the invariant linker sequence between barcode parts 1 and 2 and uses this to determine the correct location of the barcode and UMI. The barcode sequence is then matched agains the whitelist from the previous step to correct and deduplicate the bead barcodes before appending the barcode and UMI to the sequence ID of the corresponding read 2. Reads lacking a high-confidnce linker position or valid bead barcode are discarded.
+    &nbsp; 
+    If `doNonSyrah=true` the non-Syrah version always takes the barcode and UMI from the canonically expected positions and matches agains the non-Syrah whitelist. It also appends the barcode and UMI to the read 2 sequence ID and discards reads without a valid barcode. 
+    &nbsp; 
+       
     **KEY OUTPUT FILES:** `r2_barcode_tagged.fastq`, `r2_barcode_tagged_nonSyrah.fastq` (if `doNonSyrah=true`)</details>
 
     **NOTE:** This is the end of the minimal Syrah pipeline, when you reach a barcode corrected and UMI tagged read 2 FASTQ.
 
 -   5 &ensp; **`bash /path/to/syrahDir/STAR_alignment.sh /path/to/my_manifest.txt`**
 
-    <details>This step uses the STAR aligner to align the barcode corrected and tagged read 2 FASTQ to the reference genome or transcriptome. You can modify the alignment parameters in the `STAR_alignment.sh` file.\
-    \
+    <details>This step uses the STAR aligner to align the barcode corrected and tagged read 2 FASTQ to the reference genome or transcriptome. You can modify the alignment parameters in the `STAR_alignment.sh` file.
+    &nbsp; 
+       
     **KEY OUTPUT FILES:** `Aligned.sortedByCoord.out.bam`, `nonSyrah_Aligned.sortedByCoord.out.bam` (if `doNonSyrah=true`)</details>
 
 -   6 &ensp; **`bash /path/to/syrahDir/quantify_counts.sh /path/to/my_manifest.txt`**
 
-    <details>This step first uses Subread's `featureCounts` function to assign reference-aligned reads to the gene features present in your GTF file. Then the BAM is sorted and indexed so that the UMI-tools function `count` can generate a digital gene expression matrix with genes/transcripts as the rows and beads as the columns.\
-    \
+    <details>This step first uses Subread's `featureCounts` function to assign reference-aligned reads to the gene features present in your GTF file. Then the BAM is sorted and indexed so that the UMI-tools function `count` can generate a digital gene expression matrix with genes/transcripts as the rows and beads as the columns.
+    &nbsp; 
+       
     **KEY OUTPUT FILES:** `counts.tzv.gz`, `nonSyrah_counts.tsv.gz` (if `doNonSyrah=true`)</details>
 
 -   7 &ensp; **`Rscript /path/to/syrahDir/graphical_outputs.R /path/to/my_manifest.txt`**
 
-    <details>This step first uses can generates a PDF with some summary and QA plots for the final data, showing info for eithat all beads in the dataset (\>=1 UMIs) or those with at least 25 reads (\>=25 UMIs).\
-       \
-        **KEY OUTPUT FILES:** `Syrah_results_summary.pdf`, `nonSyrah_results_summary.pdf` (if `doNonSyrah=true`)</details>
+    <details>This step first uses can generates a PDF with some summary and QA plots for the final data, showing info for eithat all beads in the dataset (>=1 UMIs) or those with at least 25 reads (>=25 UMIs).
+       &nbsp; 
+       
+       **KEY OUTPUT FILES:** `Syrah_results_summary.pdf`, `nonSyrah_results_summary.pdf` (if `doNonSyrah=true`)</details>
 
-And that's -- you're done! You'll have a gene expression matrix called `batchName_counts.txt.gz` and a result summary called `batchName_Syrah_results_summary.pdf` (and ones for the non-Syrah version if `doNonSyrah=true`). There's a directory called `intermediate_files` which contains precisely that and can be deleted if you're sure everything went as planned. Here's an example of what the results summary looks like:\
-![example Syrah results summary](https://github.com/0x644BE25/Syrah/blob/main/example_Syrah_results_summary.png?raw=true)\
-\
+And that's -- you're done! You'll have a gene expression matrix called `batchName_counts.txt.gz` and a result summary called `batchName_Syrah_results_summary.pdf` (and ones for the non-Syrah version if `doNonSyrah=true`). There's a directory called `intermediate_files` which contains precisely that and can be deleted if you're sure everything went as planned. Here's an example of what the results summary looks like:
+&nbsp; 
+
+![example Syrah results summary](https://github.com/0x644BE25/Syrah/blob/main/example_Syrah_results_summary.png?raw=true)
+&nbsp; 
+
 
 ## Questions? Problems? Reach out!
 
