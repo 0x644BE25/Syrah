@@ -138,7 +138,7 @@ The commands to run each step of the Syrah pipeline in order are
 -   7 &ensp; **`Rscript /path/to/syrahDir/graphical_outputs.R /path/to/my_manifest.txt`**
 
     <details>This step first uses can generates a PDF with some summary and QA plots for the final data, showing info for eithat all beads in the dataset (\>=1 UMIs) or those with at least 25 reads (\>=25 UMIs).\
-    [![A Syrah results summary page.](https://github.com/0x644BE25/Syrah/blob/main/Syrah_results_summary.png?raw=true)](https://github.com/0x644BE25/Syrah/blob/main/Syrah_results_summary.png?raw=true)\
+    [![A Syrah results summary page.](https://github.com/0x644BE25/Syrah/blob/main/example_Syrah_results_summary.png?raw=true)](https://github.com/0x644BE25/Syrah/blob/main/Syrah_results_summary.png?raw=true)\
     **KEY OUTPUT FILES:** `Syrah_results_summary.pdf`, `nonSyrah_results_summary.pdf` (if `doNonSyrah=true`)</details>
 
 And that's -- you're done! You'll have a gene expression matrix called `batchName_counts.txt.gz` and a result summary called `batchName_Syrah_results_summary.pdf` (and ones for the non-Syrah version if `doNonSyrah=true`). There's a directory called `intermediate_files` which contains precisely that and can be deleted if you're sure everything went as planned.
