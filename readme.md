@@ -98,7 +98,8 @@ The commands to run each step of the Syrah pipeline in order are
 
 -   1 &ensp; **`Rscript /path/to/syrahDir/determine_version.R /path/to/my_manifest.txt`**
 
-    <details>This step uses the first 100K read 1 sequences to estimate the nucleotide frequency at each position along read 1. Syrah determines which version of capture oligonculeotide was used on the beads on the puck in order to find the expected positions of the both parts of the bead barcode as well as the [UMI](https://dnatech.ucdavis.edu/faqs/what-are-umis-and-why-are-they-used-in-high-throughput-sequencing). There will be a plot in the `intermediate_files` directory showing the nucleotide frequencies and barcode/UMI positions (`B`=bead barcode, `U`=UMI).![A nucleotide frequency barplot with colors indicating A, C, G, or T. The x-axis indicates position along read 1, from 5' on the left to 3' on the right, with letters indicating the position of the bead barcode (B) and UMI (U).](https://github.com/0x644BE25/Syrah/blob/main/estimated_r1_nt_frequencies.png?raw=true "estimated read 1 nucleotide frequencies")\
+    <details>This step uses the first 100K read 1 sequences to estimate the nucleotide frequency at each position along read 1. Syrah determines which version of capture oligonculeotide was used on the beads on the puck in order to find the expected positions of the both parts of the bead barcode as well as the UMI. There will be a plot in the `intermediate_files` directory showing the nucleotide frequencies and barcode/UMI positions (`B`=bead barcode, `U`=UMI). A nucleotide frequency barplot with colors indicating A, C, G, or T. The x-axis indicates position along read 1, from 5' on the left to 3' on the right, with letters indicating the position of the bead barcode (B) and UMI (U).\
+       \
     **KEY OUTPUT FILES:** `estimated_read_1_nucleotide_frequencies.csv`, `r1_pattern.txt`, `r1_version.txt`</details>
 
 -   2 &ensp; **`Rscript /path/to/syrahDir/create_bead_deduplication_map.R /path/to/my_manifest.txt`**
@@ -125,23 +126,25 @@ The commands to run each step of the Syrah pipeline in order are
 
 -   5 &ensp; **`bash /path/to/syrahDir/STAR_alignment.sh /path/to/my_manifest.txt`**
 
-    <details>This step uses the [STAR](https://github.com/alexdobin/STAR/tree/master) aligner to align the barcode corrected and tagged read 2 FASTQ to the reference genome or transcriptome. You can modify the [alignment parameters](https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf) in the `STAR_alignment.sh` file.\
+    <details>This step uses the STAR aligner to align the barcode corrected and tagged read 2 FASTQ to the reference genome or transcriptome. You can modify the alignment parameters in the `STAR_alignment.sh` file.\
     \
     **KEY OUTPUT FILES:** `Aligned.sortedByCoord.out.bam`, `nonSyrah_Aligned.sortedByCoord.out.bam` (if `doNonSyrah=true`)</details>
 
 -   6 &ensp; **`bash /path/to/syrahDir/quantify_counts.sh /path/to/my_manifest.txt`**
 
-    <details>This step first uses [Subread](https://subread.sourceforge.net/)'s [`featureCounts`](https://subread.sourceforge.net/featureCounts.html) function to assign reference-aligned reads to the gene features present in your GTF file. Then the BAM is sorted and indexed so that the [UMI-tools](https://umi-tools.readthedocs.io/en/latest/index.html) function [count](https://umi-tools.readthedocs.io/en/latest/reference/count.html) can generate a digital gene expression matrix with genes/transcripts as the rows and beads as the columns.\
+    <details>This step first uses Subread's `featureCounts` function to assign reference-aligned reads to the gene features present in your GTF file. Then the BAM is sorted and indexed so that the UMI-tools function `count` can generate a digital gene expression matrix with genes/transcripts as the rows and beads as the columns.\
     \
     **KEY OUTPUT FILES:** `counts.tzv.gz`, `nonSyrah_counts.tsv.gz` (if `doNonSyrah=true`)</details>
 
 -   7 &ensp; **`Rscript /path/to/syrahDir/graphical_outputs.R /path/to/my_manifest.txt`**
 
     <details>This step first uses can generates a PDF with some summary and QA plots for the final data, showing info for eithat all beads in the dataset (\>=1 UMIs) or those with at least 25 reads (\>=25 UMIs).\
-    [Here's an example of how it looks](https://github.com/0x644BE25/Syrah/blob/main/example_Syrah_results_summary.png?raw=true)\
-    **KEY OUTPUT FILES:** `Syrah_results_summary.pdf`, `nonSyrah_results_summary.pdf` (if `doNonSyrah=true`)</details>
+       \
+        **KEY OUTPUT FILES:** `Syrah_results_summary.pdf`, `nonSyrah_results_summary.pdf` (if `doNonSyrah=true`)</details>
 
-And that's -- you're done! You'll have a gene expression matrix called `batchName_counts.txt.gz` and a result summary called `batchName_Syrah_results_summary.pdf` (and ones for the non-Syrah version if `doNonSyrah=true`). There's a directory called `intermediate_files` which contains precisely that and can be deleted if you're sure everything went as planned.
+And that's -- you're done! You'll have a gene expression matrix called `batchName_counts.txt.gz` and a result summary called `batchName_Syrah_results_summary.pdf` (and ones for the non-Syrah version if `doNonSyrah=true`). There's a directory called `intermediate_files` which contains precisely that and can be deleted if you're sure everything went as planned. Here's an example of what the results summary looks like:\
+![example Syrah results summary](https://github.com/0x644BE25/Syrah/blob/main/example_Syrah_results_summary.png?raw=true)\
+\
 
 ## Questions? Problems? Reach out!
 
