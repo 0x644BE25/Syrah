@@ -16,7 +16,9 @@ manifestFile <- commandArgs(trailingOnly=TRUE)[1]
 true <- TRUE
 false <- FALSE
 source(manifestFile)
-if (endsWith(writeDir,'/')) { writeDir <- paste0(writeDir,'/') }
+if (!endsWith(writeDir,'/')) { writeDir <- paste0(writeDir,'/') }
+
+minUMI <- 10
 
 spaces <- list(yesTC=c(rep(0,8),.25,rep(0,17),.25,rep(0,5),.25,rep(0,2),.25,rep(0,7),.25,rep(0,99)),
                noTC=c(rep(0,8),.25,rep(0,17),.25,rep(0,5),.25,.25,rep(0,7),.25,rep(0,99)),
@@ -86,12 +88,12 @@ df <- data.frame(row.names=colnames(syrah),
 df$colNum <- (log10(df$nUMI)-min(log10(df$nUMI)))/(max(log10(df$nUMI))-min(log10(df$nUMI)))
 df$col <- sapply(df$colNum,\(x){ blendNcolors(colors=c('#ffffcc','#ffcc00','#ff8800','#ff0000','#660022','#000000'),x) })
 
-df.min25 <- df[df$nUMI>=25,]
-df.min25$colNum <- (log10(df.min25$nUMI)-min(log10(df.min25$nUMI)))/(max(log10(df.min25$nUMI))-min(log10(df.min25$nUMI)))
-df.min25$col <- sapply(df.min25$colNum,\(x){ blendNcolors(colors=c('#ccffff','#00ccff','#0088ff','#0000ff','#220066','#000000'),x) })
+df.overMin <- df[df$nUMI>=minUMI,]
+df.overMin$colNum <- (log10(df.overMin$nUMI)-min(log10(df.overMin$nUMI)))/(max(log10(df.overMin$nUMI))-min(log10(df.overMin$nUMI)))
+df.overMin$col <- sapply(df.overMin$colNum,\(x){ blendNcolors(colors=c('#ccffff','#00ccff','#0088ff','#0000ff','#220066','#000000'),x) })
 
 nGenes <- sum(rowSums(syrah)>0)
-nGenes.min25 <- sum(rowSums(syrah[,colSums(syrah>=25)])>0)
+nGenes.overMin <- sum(rowSums(syrah[,colSums(syrah>=minUMI)])>0)
 
 try({ shh <- dev.off() },silent=TRUE)
 
@@ -133,34 +135,32 @@ polygon(den,col='#ff000044')
 abline(v=median(log10(df$nGene)))
 abline(v=mean(log10(df$nGene)),lty='dashed')
 
-
 plot(df$x~df$y,col=df$col,
-     pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=25 UMIs)',asp=1)
+     pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=1 UMIs)',asp=1)
 
 # MIN 25 NUMI
-den <- density(log10(df.min25$nUMI))
+den <- density(log10(df.overMin$nUMI))
 plot(den,
      col='#0000ff',lwd=2,
      xlab='log10 UMI count',ylab='',yaxt='n',
-     main=paste0('nUMI distribution (>=25 UMIs, ',nrow(df.min25),' beads)'),
-     sub=paste0('median: ',median(df.min25$nUMI),'   mean: ',round(mean(df.min25$nUMI),2)))
+     main=paste0('nUMI distribution (>=',minUMI,' UMIs, ',nrow(df.overMin),' beads)'),
+     sub=paste0('median: ',median(df.overMin$nUMI),'   mean: ',round(mean(df.overMin$nUMI),2)))
 polygon(den,col='#0088ff44')
-abline(v=median(log10(df.min25$nUMI)))
-abline(v=mean(log10(df.min25$nUMI)),lty='dashed')
+abline(v=median(log10(df.overMin$nUMI)))
+abline(v=mean(log10(df.overMin$nUMI)),lty='dashed')
 
-den <- density(log10(df.min25$nGene))
+den <- density(log10(df.overMin$nGene))
 plot(den,
      col='blue',lwd=2,
      xlab='log10 feature count',ylab='',yaxt='n',
-     main=paste0('nFeature distribution (>=25 UMIs, ',nGenes.min25,' unique features)'),
-     sub=paste0('median: ',median(df.min25$nGene),'   mean: ',round(mean(df.min25$nGene),2)))
+     main=paste0('nFeature distribution (>=',minUMI,' UMIs, ',nGenes.overMin,' unique features)'),
+     sub=paste0('median: ',median(df.overMin$nGene),'   mean: ',round(mean(df.overMin$nGene),2)))
 polygon(den,col='#0088ff44')
-abline(v=median(log10(df.min25$nGene)))
-abline(v=mean(log10(df.min25$nGene)),lty='dashed')
+abline(v=median(log10(df.overMin$nGene)))
+abline(v=mean(log10(df.overMin$nGene)),lty='dashed')
 
-
-plot(df.min25$x~df.min25$y,col=df.min25$col,
-     pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=25 UMIs)',asp=1)
+plot(df.overMin$x~df.overMin$y,col=df.overMin$col,
+     pch=20,cex=.2,xlab='',ylab='',main=paste0('nUMI (>=',minUMI,' UMIs)'),asp=1)
 
 shh <- dev.off()
 
@@ -176,12 +176,12 @@ if (doNonSyrah) {
   df$colNum <- (log10(df$nUMI)-min(log10(df$nUMI)))/(max(log10(df$nUMI))-min(log10(df$nUMI)))
   df$col <- sapply(df$colNum,\(x){ blendNcolors(colors=c('#ffffcc','#ffcc00','#ff8800','#ff0000','#660022','#000000'),x) })
   
-  df.min25 <- df[df$nUMI>=25,]
-  df.min25$colNum <- (log10(df.min25$nUMI)-min(log10(df.min25$nUMI)))/(max(log10(df.min25$nUMI))-min(log10(df.min25$nUMI)))
-  df.min25$col <- sapply(df.min25$colNum,\(x){ blendNcolors(colors=c('#ccffff','#00ccff','#0088ff','#0000ff','#220066','#000000'),x) })
+  df.overMin <- df[df$nUMI>=minUMI,]
+  df.overMin$colNum <- (log10(df.overMin$nUMI)-min(log10(df.overMin$nUMI)))/(max(log10(df.overMin$nUMI))-min(log10(df.overMin$nUMI)))
+  df.overMin$col <- sapply(df.overMin$colNum,\(x){ blendNcolors(colors=c('#ccffff','#00ccff','#0088ff','#0000ff','#220066','#000000'),x) })
   
   nGenes <- sum(rowSums(std)>0)
-  nGenes.min25 <- sum(rowSums(std[,colSums(std>=25)])>0)
+  nGenes.overMin <- sum(rowSums(std[,colSums(std>=minUMI)])>0)
   
   try({ shh <- dev.off() },silent=TRUE)
   
@@ -224,32 +224,32 @@ if (doNonSyrah) {
   
   
   plot(df$x~df$y,col=df$col,
-       pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=25 UMIs)',asp=1)
+       pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=1 UMIs)',asp=1)
   
   # MIN 25 NUMI
-  den <- density(log10(df.min25$nUMI))
+  den <- density(log10(df.overMin$nUMI))
   plot(den,
        col='#0000ff',lwd=2,
        xlab='log10 UMI count',ylab='',yaxt='n',
-       main=paste0('nUMI distribution (>=25 UMIs, ',nrow(df.min25),' beads)'),
-       sub=paste0('median: ',median(df.min25$nUMI),'   mean: ',round(mean(df.min25$nUMI),2)))
+       main=paste0('nUMI distribution (>=',minUMI,' UMIs, ',nrow(df.overMin),' beads)'),
+       sub=paste0('median: ',median(df.overMin$nUMI),'   mean: ',round(mean(df.overMin$nUMI),2)))
   polygon(den,col='#0088ff44')
-  abline(v=median(log10(df.min25$nUMI)))
-  abline(v=mean(log10(df.min25$nUMI)),lty='dashed')
+  abline(v=median(log10(df.overMin$nUMI)))
+  abline(v=mean(log10(df.overMin$nUMI)),lty='dashed')
   
-  den <- density(log10(df.min25$nGene))
+  den <- density(log10(df.overMin$nGene))
   plot(den,
        col='blue',lwd=2,
        xlab='log10 feature count',ylab='',yaxt='n',
-       main=paste0('nFeature distribution (>=25 UMIs, ',nGenes.min25,' unique features)'),
-       sub=paste0('median: ',median(df.min25$nGene),'   mean: ',round(mean(df.min25$nGene),2)))
+       main=paste0('nFeature distribution (>=',minUMI,' UMIs, ',nGenes.overMin,' unique features)'),
+       sub=paste0('median: ',median(df.overMin$nGene),'   mean: ',round(mean(df.overMin$nGene),2)))
   polygon(den,col='#0088ff44')
-  abline(v=median(log10(df.min25$nGene)))
-  abline(v=mean(log10(df.min25$nGene)),lty='dashed')
+  abline(v=median(log10(df.overMin$nGene)))
+  abline(v=mean(log10(df.overMin$nGene)),lty='dashed')
   
   
-  plot(df.min25$x~df.min25$y,col=df.min25$col,
-       pch=20,cex=.2,xlab='',ylab='',main='nUMI (>=25 UMIs)',asp=1)
+  plot(df.overMin$x~df.overMin$y,col=df.overMin$col,
+       pch=20,cex=.2,xlab='',ylab='',main=paste0('nUMI (>=',minUMI,' UMIs)'),asp=1)
   
   shh <- dev.off()
   
