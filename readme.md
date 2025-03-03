@@ -43,7 +43,7 @@ Once the pre-requisites are installed, you're basically done. Just [clone](https
 
 ## 2. Input files
 
-**NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from <https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz> You'll simply need a mouse genome and GTF for alignment (but not if you just care about `Syrah_minimal.sh`).
+**NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from <https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz> You'll simply need a mouse genome and GTF such as [GRCm39](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001635.27/) for alignment (but not if you just care about `Syrah_minimal.sh`). 
 
 We've tried to choose a minimal set of starting data that uses the most frequently published "raw" files. However, Syrah's barcode correction step does require a read 1 FASTQ that has not yet had the barcode extracted. If your read 1 FASTQ has reads of 42-44 nt long, you should be good to go. The total input data is:
 
