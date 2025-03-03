@@ -119,13 +119,15 @@ repeat({
   good_inds <- id_ind[!is.na(bcs)]
   allr2inds <- sort(c(good_inds,good_inds+1,good_inds+2,good_inds+3))
   r2s <- r2s[allr2inds]
-  id_ind <- seq(1,length(r2s),by=4)
-  spl <- strsplit(r2s[id_ind],' ')
-  r2s[id_ind] <- paste0(sapply(spl,\(x){ x[1] }),bc_umi,' ',sapply(spl,\(x){ x[2] }))
-  writeLines(r2s,writeR2)
+  if (length(r2s)>0) {
+    id_ind <- seq(1,length(r2s),by=4)
+    spl <- strsplit(r2s[id_ind],' ')
+    r2s[id_ind] <- paste0(sapply(spl,\(x){ x[1] }),bc_umi,' ',sapply(spl,\(x){ x[2] }))
+    writeLines(r2s,writeR2)
+  }
   totalReads <- totalReads+length(r1seqs)
   if (totalReads%%(10^6)==0) { cat('  ',format(as.POSIXlt(Sys.time())),' ',totalReads,'reads processed\n') }
-  if (length(r1seqs)<batchSize) { break() }
+  if (length(r1seqs)<batchSize | totalReads==nR1) { break() }
 })
 close(conR1)
 close(conR2)
@@ -189,13 +191,15 @@ if (doNonSyrah) {
     good_inds <- id_ind[!is.na(bcs)]
     allr2inds <- sort(c(good_inds,good_inds+1,good_inds+2,good_inds+3))
     r2s <- r2s[allr2inds]
-    id_ind <- seq(1,length(r2s),by=4)
-    spl <- strsplit(r2s[id_ind],' ')
-    r2s[id_ind] <- paste0(sapply(spl,\(x){ x[1] }),bc_umi,' ',sapply(spl,\(x){ x[2] }))
-    writeLines(r2s,writeR2)
+    if (length(r2s)>0){
+      id_ind <- seq(1,length(r2s),by=4)
+      spl <- strsplit(r2s[id_ind],' ')
+      r2s[id_ind] <- paste0(sapply(spl,\(x){ x[1] }),bc_umi,' ',sapply(spl,\(x){ x[2] }))
+      writeLines(r2s,writeR2)
+    }
     totalReads <- totalReads+length(r1seqs)
     if (totalReads%%(10^6)==0) { cat('  ',format(as.POSIXlt(Sys.time())),' ',totalReads,'reads processed\n') }
-    if (length(r1seqs)<batchSize) { break() }
+    if (length(r1seqs)<batchSize | totalReads==nR1) { break() }
   })
   close(conR1)
   close(conR2)
