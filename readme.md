@@ -35,9 +35,7 @@ If you're on MacOS or linux, you can install the dependencies using `install_dep
 
 - 1 &ensp; Open a terminal window and navigate to the directory where you want to install software <details>**MacOS:** `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder` </details>
 - 2 &ensp; Download Syrah's files to your chosen install directory
-- 3 &ensp; Run `bash install_dependencies.sh` <details>You will may need to enter your user password during installation, so watch the terminal! (Alternatively use `sudo bash install_dependencies.sh`)</details>
-
-
+- 3 &ensp; Run `bash install_dependencies.sh` **NOTE:** You will need to enter your user password and confirm some steps during installation, so watch the terminal. This process should take only a few mintues depending on your internet connection.
 
 
 #### Method B: Singularity
