@@ -52,7 +52,7 @@ Once Singularity is installed and working, download the pre-built container from
 
 #### Method C: Manual
 
-Other than the programming language R, Syrah relies on several common bioinformatics tools. You will need the following software (if you are working on a shared compute resource, you should check if you already have some or all of them). Versions in parenthesis are those used during pipeline development, but most recent versions are likely to work as well:
+Other than the programming language R, Syrah relies on several common bioinformatics tools. You will need the following software (if you are working on a shared compute resource, you should check if you already have some or all of them). Versions in parenthesis are those used during pipeline development, but most relatively recent (and possibly quite old) versions are likely to work as well:
 
 -   [R](https://www.r-project.org/) (v4.4.1) and the R package [dbscan](https://github.com/mhahsler/dbscan)
 
