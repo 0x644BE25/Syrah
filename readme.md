@@ -9,7 +9,7 @@ preprint info and link here, maybe one summary figure
 
 This pipeline is intended to improve both the quantity and fidelity of usable data from Slide-seqV2 or Curio spatial transcriptomic datasets by correcting for two sources of error. We also hope that you find it easy to install and run.
 
-## 1. Basic Usage
+## Basic Usage
 
 If you want to add Syrah to your current pipeline, the process is simple. You'll need your read1 and read2 FASTQ files and the barcode coordinates file provided by the manufacturer.
 
@@ -23,7 +23,7 @@ That's it! You'll now have a read 2 FASTQ with corrected barcodes and UMIs appen
 **NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from <https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz> You'll simply need a mouse genome and GTF such as [GRCm39](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001635.27/) for alignment (but not if you just care about `Syrah_minimal.sh`). 
 
 
-## 2. Pipeline Usage
+## Standalone Analysis Pipeline Usage
 
 Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a bit more involved, but we hope that it is at least as easy to install and use. Here are the steps:
 
