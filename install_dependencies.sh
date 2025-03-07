@@ -31,8 +31,7 @@ mv 2.7.10b.tar.gz STAR-2.7.10b.tar.gz
 tar -xzf STAR-2.7.10b.tar.gz
 cd STAR-2.7.10b/
 
-if [[ $os == "mac" ]]; then
-
+if [[ $OSTYPE == "darwin"* ]]; then
   # get homebrew installed
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   echo >> /Users/cb2350/.zprofile
@@ -47,7 +46,7 @@ if [[ $os == "mac" ]]; then
   cd source
   make STARforMacStatic CXX=/usr/local/Cellar/gcc/8.2.0/bin/g++-8
   
-elif [[ $os == "linux" ]]; then
+elif [[ $OSTYPE == "linux"* ]]; then
   cd source
   make STAR
 fi
@@ -64,12 +63,12 @@ pip3 install umi_tools==1.1.5
 
 # ================= subread ==========================
 
-if [[ $os =="mac" ]]; then
+if [[ $OSTYPE == "darwin"* ]]; then
   curl -O -L "https://sourceforge.net/projects/subread/files/subread-2.0.2/subread-2.0.2-macOS-x86_64.tar.gz"
   tar -zxf subread-2.0.2-macOS-x86_64.tar.gz
-  cd subread-2.0.2-macOS-x86_64/src
-elif [[ $os == "linux" ]]; then
+elif [[ $OSTYPE == "linux"* ]]; then
   curl -O -L "https://sourceforge.net/projects/subread/files/subread-2.0.2/subread-2.0.2-Linux-x86_64.tar.gz"
   tar -zxf subread-2.0.2-Linux-x86_64.tar.gz
-  cd subread-2.0.2-Linux-x86_64/src
 fi
+
+echo "ALL DONE!"
