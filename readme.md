@@ -11,7 +11,7 @@ This pipeline is intended to improve both the quantity and fidelity of usable da
 
 ## 1. Basic Usage
 
-If you want to add Syrah to your current pipeline, the process is simple
+If you want to add Syrah to your current pipeline, the process is simple. You'll need your read1 and read2 FASTQ files and the barcode coordinates file provided by the manufacturer.
 
 -   1  &ensp; have [R](https://www.r-project.org/) with the [dbscan](https://github.com/mhahsler/dbscan) library installed (R v.4.4.1 was used in development, but nearly any version should work)
 -   2  &ensp; download Syrah's code
@@ -19,6 +19,9 @@ If you want to add Syrah to your current pipeline, the process is simple
 -   4  &ensp; run  `Syrah_minimal.sh /path/to/your/manifest_minimal.txt`
 
 That's it! You'll now have a read 2 FASTQ with corrected barcodes and UMIs appended to the sequence ID e.g. `seqID_beadbarcode_UMI`. Continue on with your pipeline as usual, ensuring that bead barcodes and UMIs are taken from the end of the sequnce ID.
+
+**NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from <https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz> You'll simply need a mouse genome and GTF such as [GRCm39](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001635.27/) for alignment (but not if you just care about `Syrah_minimal.sh`). 
+
 
 ## 2. Pipeline Usage
 
