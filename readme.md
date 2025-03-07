@@ -33,9 +33,9 @@ Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a
 
 If you're on MacOS or linux, you can install the dependencies using `install_dependencies.sh`. This will require some minimal use of the terminal and will install software with default options. If you would like to have more control, use installation **Method C: Manual** (below). Steps:
 
-- 1 &ensp; Open a terminal window and navigate to the directory where you want to install software \ MacOS: `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder`
+- 1 &ensp; Open a terminal window and navigate to the directory where you want to install software <details>**MacOS:** `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder` </details>
 - 2 &ensp; Download Syrah's files to your chosen install directory
-- 3 &ensp; Run `bash install_dependencies.sh` \ **NOTE:** You can either use `sudo` before the command (`sudo bash install_dependencies.sh`), or watch the terminal during installation and enter your password as needed.
+- 3 &ensp; Run `bash install_dependencies.sh` <details>You will may need to enter your user password during installation, so watch the terminal! (Alternatively use `sudo bash install_dependencies.sh`)</details>
 
 
 
