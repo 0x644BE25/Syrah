@@ -9,9 +9,24 @@ preprint info and link here, maybe one summary figure
 
 This pipeline is intended to improve both the quantity and fidelity of usable data from Slide-seqV2 or Curio spatial transcriptomic datasets by correcting for two sources of error. We also hope that you find it easy to install and run.
 
-## 1. Installation
+## 1. Basic Usage
 
-### Method A: Singularity
+If you want to add Syrah to your current pipeline, the process is simple
+
+1 - have R with the dbscan library installed
+2 - download Syrah's code
+3 - fill out manifest_minimal.txt
+4 - run `syrah_minimal.Sh /path/to/your/manifest_minimal.txt`
+
+That's it! You'll now have a read 2 FASTQ with corrected barcodes and UMIs appended to the sequence ID e.g. `seqID_beadbarcode_UMI`. Continue on with your pipeline as usual, ensuring that bead barcodes and UMIs are taken from the end of the sequnce ID.
+
+## 2. Pipeline Usage
+
+Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a bit more involved, but we hope that it is _at least_ as easy to install and use as the aforementioned pipelines. Here are the steps:
+
+### 1. Installation
+
+#### Method A: Singularity
 
 Singularity is a container platform which allows you to build an encapsulated software environment ("container") that has all software components installed with the proper versions and configurations. If you do not already have Singularity (if working on a shared compute resource you should check), you will need to install it first.
 
@@ -23,7 +38,7 @@ Once Singularity is installed and working, download the pre-built container from
 
 **NOTE:** Scripts you run using Singularity will always have access to files in your user folder, but if you are reading or writing data in a different folder, you may need to [enable access to it using the `--bind` command](https://apptainer.org/user-docs/master/quick_start.html#working-with-files).
 
-### Method B: Manual
+#### Method B: Manual
 
 Other than the programming language R, Syrah relies on several common bioinformatics tools. You will need the following software (if you are working on a shared compute resource, you should check if you already have some or all of them). Versions in parenthesis are those used during pipeline development, but most recent versions are likely to work as well:
 
@@ -41,7 +56,7 @@ Other than the programming language R, Syrah relies on several common bioinforma
 
 Once the pre-requisites are installed, you're basically done. Just [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the Syrah git repository to your desired location. Don't have `git` installed? No problem. Just copy the `.R` and `.sh` files manually to your desired location. Install complete!
 
-## 2. Input files
+### 2. Input files
 
 **NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from <https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz> You'll simply need a mouse genome and GTF such as [GRCm39](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001635.27/) for alignment (but not if you just care about `Syrah_minimal.sh`). 
 
@@ -72,11 +87,11 @@ We've tried to choose a minimal set of starting data that uses the most frequent
 
 Use the `manifest.txt` file as a template, pay attention to local vs global paths, and ensure that strings are quoted.
 
-## 3. Running Syrah
+### 3. Running Syrah
 
 As with installation, there are two ways to run Syrah: an automated way and a manual method. The manual method is helpful for troubleshooting, while the automated method allows for high-throughput processing of many datasets.
 
-### Method A: Automated
+#### Method A: Automated
 
 All you need to do is pass your manifest file(s) to `Syrah.sh`:
 
@@ -84,7 +99,7 @@ All you need to do is pass your manifest file(s) to `Syrah.sh`:
 
 **SINGULARITY USERS:** use `Singularity exec /path/to/Syrah-v2.0.0.sif /path/to/Syrah.sh /path/to/my_manifest.txt` instead.
 
-### Method B: Manual
+#### Method B: Manual
 
 I promise it's not as daunting as this schematic makes it look! You just run each command in order, passing your manifest file as the only parameter each time.
 
