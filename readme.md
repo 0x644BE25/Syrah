@@ -22,7 +22,7 @@ That's it! You'll now have a read 2 FASTQ with corrected barcodes and UMIs appen
 
 ## 2. Pipeline Usage
 
-Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a bit more involved, but we hope that it is _at least_ as easy to install and use as the aforementioned pipelines. Here are the steps:
+Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a bit more involved, but we hope that it is at least as easy to install and use. Here are the steps:
 
 ### 1. Installation
 
