@@ -13,10 +13,10 @@ This pipeline is intended to improve both the quantity and fidelity of usable da
 
 If you want to add Syrah to your current pipeline, the process is simple
 
-1 - have R with the dbscan library installed
-2 - download Syrah's code
-3 - fill out manifest_minimal.txt
-4 - run `syrah_minimal.Sh /path/to/your/manifest_minimal.txt`
+-   1 have [R](https://www.r-project.org/) with the [dbscan](https://github.com/mhahsler/dbscan) library installed (R v.4.4.1 was used in development, but nearly any version should work)
+-   2 download Syrah's code
+-   3 fill out `manifest_minimal.txt`
+-   4 run  `Syrah_minimal.sh /path/to/your/manifest_minimal.txt`
 
 That's it! You'll now have a read 2 FASTQ with corrected barcodes and UMIs appended to the sequence ID e.g. `seqID_beadbarcode_UMI`. Continue on with your pipeline as usual, ensuring that bead barcodes and UMIs are taken from the end of the sequnce ID.
 
