@@ -1,4 +1,4 @@
-Syrah: A standalone analysis pipeline to maximize Slide-seq & Curio Seeker data
+Syrah: A utility to maximize Slide-seq & Curio Seeker data
 ==============
 
 **Author:** [Carolyn Brewster](mailto:cbrewster@stowers.org)
