@@ -13,10 +13,10 @@ This pipeline is intended to improve both the quantity and fidelity of usable da
 
 If you want to add Syrah to your current pipeline, the process is simple. You'll need your read1 and read2 FASTQ files and the barcode coordinates file provided by the manufacturer.
 
--   1  &ensp; have [R](https://www.r-project.org/) with the [dbscan](https://github.com/mhahsler/dbscan) library installed (R v.4.4.1 was used in development, but nearly any version should work)
--   2  &ensp; download Syrah's code
--   3  &ensp; fill out `manifest_minimal.txt`
--   4  &ensp; run  `Syrah_minimal.sh /path/to/your/manifest_minimal.txt`
+-   1  &ensp; Have [R](https://www.r-project.org/) with the [dbscan](https://github.com/mhahsler/dbscan) library installed (R v.4.4.1 was used in development, but nearly any version should work)
+-   2  &ensp; Download Syrah's code
+-   3  &ensp; Fill out `manifest_minimal.txt`
+-   4  &ensp; Run  `Syrah_minimal.sh /path/to/your/manifest_minimal.txt`
 
 That's it! You'll now have a read 2 FASTQ with corrected barcodes and UMIs appended to the sequence ID e.g. `seqID_beadbarcode_UMI`. Continue on with your pipeline as usual, ensuring that bead barcodes and UMIs are taken from the end of the sequnce ID.
 
@@ -29,7 +29,18 @@ Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a
 
 ### 1. Installation
 
-#### Method A: Singularity
+#### Method A: Automated
+
+If you're on MacOS or linux, you can install the dependencies using `install_dependencies.sh`. This will require some minimal use of the terminal and will install software with default options. If you would like to have more control, use installation **Method C: Manual** (below). Steps:
+
+- 1 &ensp; Open a terminal window and navigate to the directory where you want to install software \ MacOS: `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder`
+- 2 &ensp; Download Syrah's files to your chosen install directory
+- 3 &ensp; Run `bash install_dependencies.sh`
+
+
+
+
+#### Method B: Singularity
 
 Singularity is a container platform which allows you to build an encapsulated software environment ("container") that has all software components installed with the proper versions and configurations. If you do not already have Singularity (if working on a shared compute resource you should check), you will need to install it first.
 
@@ -41,7 +52,7 @@ Once Singularity is installed and working, download the pre-built container from
 
 **NOTE:** Scripts you run using Singularity will always have access to files in your user folder, but if you are reading or writing data in a different folder, you may need to [enable access to it using the `--bind` command](https://apptainer.org/user-docs/master/quick_start.html#working-with-files).
 
-#### Method B: Manual
+#### Method C: Manual
 
 Other than the programming language R, Syrah relies on several common bioinformatics tools. You will need the following software (if you are working on a shared compute resource, you should check if you already have some or all of them). Versions in parenthesis are those used during pipeline development, but most recent versions are likely to work as well:
 
