@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ######################################################
-# SYRAH
+# SYRAH MINIMAL
 #
-# GOAL: String together the various bits, checking to
-# see if we need to run all or can resume a previous 
-# incomplete run.
+# GOAL: Minimal Syrah functionality; goes only up
+# through the creation of the barcode corrected and
+# tagged read 2 FASTQ.
 ######################################################
 
 set -e
@@ -16,19 +16,20 @@ for manifestFile in "$@"
 do
   resume=false
   source "$manifestFile"
-  echo ""
-  echo $(date)
+  if ! [[ $writeDir == */ ]] ; then
+    writeDir="${writeDir}/"
+  fi
   if ! [[ $syrahDir == */ ]] ; then
     syrahDir="${syrahDir}/"
   fi
+
+  echo ""
+  echo $(date)
   echo "Manifest ${i}: $manifestFile"
   echo "Syrah code directory: $syrahDir"
   echo "Read 1 FASTQ: $read1fastq"
   echo "Read 2 FASTQ: $read2fastq"
   echo "Puck file: $puckFile"
-  if ! [[ $writeDir == */ ]] ; then
-    writeDir="${writeDir}/"
-  fi
   echo "Write directory: $writeDir"
   echo "Batch name: $batchName"
   echo "Read 1 oligo version: $read1format"
@@ -36,6 +37,13 @@ do
   echo "Minimum nUMI threshold: $minUMI"
   echo "Maximum linker alignment distance: $maxLinkerDistance"
   i=$((i + 1))
+  
+  if [ -f "${syrahDir}paths.txt" ]; then
+    while IFS="" read -r p || [ -n "$p" ]
+    do
+      PATH=$p:$PATH
+    done < "${syrahDir}"paths.txt
+  fi
   
   cd "${writeDir}"
   
