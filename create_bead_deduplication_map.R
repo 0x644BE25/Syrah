@@ -19,8 +19,8 @@ maxHammDist <- 1
 manifestFile <- commandArgs(trailingOnly=TRUE)[1]
 true <- TRUE; false <- FALSE
 source(manifestFile)
-
 if (!endsWith(writeDir,'/')) { writeDir <- paste0(writeDir,'/') }
+if (!endsWith(syrahDir,'/')) { syrahDir <- paste0(syrahDir,'/') }
 
 # ================= METHODS ==========================
 
