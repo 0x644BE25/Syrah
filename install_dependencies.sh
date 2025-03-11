@@ -20,6 +20,8 @@ cd samtools-1.20
 ./configure --prefix="${syrahDir}/samtools-1.20"
 make
 make install
+
+samtools_path="${syrahDir}/samtools-1.20/bin"
 cd $syrahDir
 
 # ================= STAR aligner =====================
@@ -43,10 +45,12 @@ if [[ $OSTYPE == "darwin"* ]]; then
   # then STAR
   cd source
   make STARforMacStatic CXX=/usr/local/Cellar/gcc/8.2.0/bin/g++-8
+  star_path="${syrahDir}/STAR-2.7.10b/bin/MacOSX_x86_64"
   
 elif [[ $OSTYPE == "linux"* ]]; then
   cd source
   make STAR
+  star_path="${syrahDir}/STAR-2.7.10b/bin/Linux_x86_64"
 fi
 
 cd $syrahDir
@@ -59,6 +63,7 @@ tar -xzf UMI-tools-1.1.5.tar.gz
 cd UMI-tools-1.1.5
 pip3 install umi_tools==1.1.5
 
+umitools_path="/Users/${user_name}/Library/Python/3.9/lib/python/site-packages"
 cd $syrahDir
 
 
@@ -67,24 +72,21 @@ cd $syrahDir
 if [[ $OSTYPE == "darwin"* ]]; then
   curl -O -L "https://sourceforge.net/projects/subread/files/subread-2.0.2/subread-2.0.2-macOS-x86_64.tar.gz"
   tar -zxf subread-2.0.2-macOS-x86_64.tar.gz
+  subread_path="${syrahDir}/subread-2.0.2-macOS-x86_64/bin"
 elif [[ $OSTYPE == "linux"* ]]; then
   curl -O -L "https://sourceforge.net/projects/subread/files/subread-2.0.2/subread-2.0.2-Linux-x86_64.tar.gz"
   tar -zxf subread-2.0.2-Linux-x86_64.tar.gz
+  subread_path="${syrahDir}/subread-2.0.2-Linux-x86_64/bin"
 fi
 
 # ================= ADD PATHS ========================
 
 user_name=$(whoami)
 
-samtools_path="${syrahDir}/samtools-1.20/bin"
-umitools_path="/Users/${user_name}/Library/Python/3.9/lib/python/site-packages"
-star_path="${syrahDir}/STAR-2.7.10b/bin"
-subread_path="${syrahDir}/subread-2.0.2-macOS-x86_64/bin"
-
 cd $syrahDir
+echo "$star_path" >> paths.txt
 echo "$samtools_path" > paths.txt
 echo "$umitools_path" >> paths.txt
-echo "$star_path" >> paths.txt
 echo "$subread_path" >> paths.txt
 
 echo ""
