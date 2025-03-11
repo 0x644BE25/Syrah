@@ -87,6 +87,10 @@ echo "$umitools_path" >> paths.txt
 echo "$star_path" >> paths.txt
 echo "$subread_path" >> paths.txt
 
+echo ""
 echo "Paths to install directories have been added to paths.txt and will be added"
 echo "to PATH when Syrah is initialized. Feel free to add additional paths (one"
 echo "per line) to paths.txt as needed."
+
+echo ""
+echo "ALL DONE!"
