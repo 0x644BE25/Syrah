@@ -11,6 +11,12 @@ set -e
 
 manifestFile=$1
 source "$manifestFile"
+if ! [[ $writeDir == */ ]] ; then
+  writeDir="${writeDir}/"
+fi
+if ! [[ $syrahDir == */ ]] ; then
+  syrahDir="${syrahDir}/"
+fi
 
 # this is the step that requires subread
 featureCounts -a "${gtf}" \
