@@ -1,5 +1,6 @@
 # INSTALL DEPENDENCIES
 syrahDir=$(pwd)
+user_name=$(whoami)
 
 # ================= CHECK OS =========================
 
@@ -62,7 +63,6 @@ mv 1.1.5.tar.gz UMI-tools-1.1.5.tar.gz
 tar -xzf UMI-tools-1.1.5.tar.gz
 cd UMI-tools-1.1.5
 pip3 install umi_tools==1.1.5
-
 umitools_path="/Users/${user_name}/Library/Python/3.9/lib/python/site-packages"
 cd $syrahDir
 
@@ -81,11 +81,10 @@ fi
 
 # ================= ADD PATHS ========================
 
-user_name=$(whoami)
-
 cd $syrahDir
-echo "$star_path" >> paths.txt
-echo "$samtools_path" > paths.txt
+
+echo "$star_path" > paths.txt
+echo "$samtools_path" >> paths.txt
 echo "$umitools_path" >> paths.txt
 echo "$subread_path" >> paths.txt
 
