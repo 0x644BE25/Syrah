@@ -1,7 +1,7 @@
 # INSTALL DEPENDENCIES
 syrahDir=$(pwd)
 
-# ================= GET OS ===========================
+# ================= CHECK OS =========================
 
 if [[ $OSTYPE == "darwin"* ]]; then
   os="mac"
@@ -20,9 +20,7 @@ cd samtools-1.20
 ./configure --prefix="${syrahDir}/samtools-1.20"
 make
 make install
-export PATH="${syrahDir}/samtools-1.20/bin:$PATH"
 cd $syrahDir
-
 
 # ================= STAR aligner =====================
 
@@ -61,6 +59,9 @@ tar -xzf UMI-tools-1.1.5.tar.gz
 cd UMI-tools-1.1.5
 pip3 install umi_tools==1.1.5
 
+cd $syrahDir
+
+
 # ================= subread ==========================
 
 if [[ $OSTYPE == "darwin"* ]]; then
@@ -71,4 +72,21 @@ elif [[ $OSTYPE == "linux"* ]]; then
   tar -zxf subread-2.0.2-Linux-x86_64.tar.gz
 fi
 
-echo "ALL DONE!"
+# ================= ADD PATHS ========================
+
+user_name=$(whoami)
+
+samtools_path="${syrahDir}/samtools-1.20/bin"
+umitools_path="/Users/${user_name}/Library/Python/3.9/lib/python/site-packages"
+star_path="${syrahDir}/STAR-2.7.10b/bin"
+subread_path="${syrahDir}/subread-2.0.2-macOS-x86_64/bin"
+
+cd $syrahDir
+echo "$samtools_path" > paths.txt
+echo "$umitools_path" >> paths.txt
+echo "$star_path" >> paths.txt
+echo "$subread_path" >> paths.txt
+
+echo "Paths to install directories have been added to paths.txt and will be added"
+echo "to PATH when Syrah is initialized. Feel free to add additional paths (one"
+echo "per line) to paths.txt as needed."
