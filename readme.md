@@ -66,6 +66,13 @@ Other than the programming language R, Syrah relies on several common bioinforma
 
 -   [Subread](https://subread.sourceforge.net/) (v2.0.2)
 
+**PATHS:** Syrah needs to know where to find the software you've installed. The auto-installer will do this for you, but for manual installation you'll need to provide it yourself. Create a file named `paths.txt` and add the path to each piece of software on its own line. Here's an example files.txt that is likely close to what you need:
+
+> /Users/myUsername/syrah_install_folder/samtools-1.20/bin \
+> /Users/myUsername/Library/Python/3.9/lib/python/site-packages \
+> /Users/myUsername/syrah_install_folder/STAR-2.7.10b/bin \
+> /Users/myUsername/syrah_install_folder/subread-2.0.2-macOS-x86_64/bin
+
 Once the pre-requisites are installed, you're basically done. Just [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the Syrah git repository to your desired location. Don't have `git` installed? No problem. Just copy the `.R` and `.sh` files manually to your desired location. Install complete!
 
 ### 2. Input files
