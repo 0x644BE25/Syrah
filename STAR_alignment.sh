@@ -11,6 +11,13 @@ set -e
 
 manifestFile=$1
 source "${manifestFile}"
+if ! [[ $writeDir == */ ]] ; then
+  writeDir="${writeDir}/"
+fi
+if ! [[ $syrahDir == */ ]] ; then
+  syrahDir="${syrahDir}/"
+fi
+
 
 echo ""
 echo "Aligning ${writeDir}intermediate_files/${batchName}_r2_barcode_tagged.fastq to STAR index at ${STARindex}"
