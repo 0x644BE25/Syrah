@@ -66,7 +66,7 @@ Other than the programming language R, Syrah relies on several common bioinforma
 
 -   [Subread](https://subread.sourceforge.net/) (v2.0.2)
 
-**PATHS:** Syrah needs to know where to find the software you've installed. The auto-installer will do this for you, but for manual installation you'll need to provide it yourself. Create a file named `paths.txt` and add the path to each piece of software on its own line. Here's an example files.txt that is likely close to what you need:
+**PATHS:** Syrah needs to know where to find the software you've installed. The auto-installer will do this for you, but for manual installation you'll need to provide it yourself. Create a file named `paths.txt` and add the path to each piece of software on its own line. Here's an example `paths.txt` that is likely close to what you need:
 
 > /Users/myUsername/syrah_install_folder/samtools-1.20/bin \
 > /Users/myUsername/Library/Python/3.9/lib/python/site-packages \
@@ -85,6 +85,8 @@ We've tried to choose a minimal set of starting data that uses the most frequent
 -   **Bead barcode + coordinates file:** This should have three tab-delimited columns (barcode, x, y) with no headers.
 -   **Reference genome:** You will need a path to both a STAR index (will be a directory) and a matching .gtf file (not required for `Syrah_minimal.sh`).
 -   **Manifest file:** This contains the parameters for the pipeline. If you have multiple samples to process, create a manifest for each and then you can give all the paths as input to the script (i.e. `/path/to/myWorkingDir/*_manifest.txt`). The parameters in the manifest are as follows:
+
+#### Manifest parameters
 
 | Parameter name      | Description                                                                                                                                                                                                                                                                    | Example                                    |
 |------------------|----------------------------|--------------------------|
