@@ -74,7 +74,7 @@ and that's it! Everything else should be handled by Syrah. If the pipeline is in
 
 ## 5. What's next?
 
-Once Syrah completes you'll have a counts file that can be imported into your favorite analysis pipeline, along with the coordinates file that stores bead location data. Syrah omits these steps to ensure Syrah has minimal installation requirements. Here are brief instructions for a couple of popular options:
+Once Syrah completes you'll have a counts file that can be imported into your favorite analysis pipeline, along with the coordinates file that stores bead location data. Syrah omits these steps to minimize installation requirements. Here are brief instructions for a couple of popular options:
 
 ### Seurat (R)
 
