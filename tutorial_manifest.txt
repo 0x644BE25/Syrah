@@ -1,0 +1,35 @@
+# path to directory with Syrah's code
+syrahDir="ADDWD/"
+
+# path to read 1 and read 2 FASTQ files
+read1fastq="ADDWD/example_input_mouse_spleen_1M/Mouse_spleen_1m_R1.fastq.gz"
+read2fastq="ADDWD/example_input_mouse_spleen_1M/Mouse_spleen_1m_R2.fastq.gz"
+
+# path to tab-delimited file of bead barcodes + coordinates
+puckFile="ADDWD/example_input_mouse_spleen_1M/A0010_039_BeadBarcodes.txt"
+
+# path to directory with STAR index and matching GTF
+STARindex="ADDWD/GRCm39_mouse_genome/"
+gtf="ADDWD/GRCm39_mouse_genome/GCF_000001635.27_GRCm39_genomic.gtf"
+
+# directory to write files to
+writeDir="ADDWD/example_input_mouse_spleen_1M/"
+
+# name for this dataset
+batchName="curio_test_data"
+
+# number of cores to use, if in doubt use 1
+nCores=1
+
+# maximum linker sequence matching distance, 5 recommended
+maxLinkerDistance=5
+
+# should Syrah generate a standard processed version of the data as well?
+doNonSyrah=true
+
+# should Syrah attempt to resume from the last step after a failed run?
+resume=true
+
+# minimum UMI for filtered output from graphical_outputs
+# DOES NOT affect expression matrix output
+minUMI=10
