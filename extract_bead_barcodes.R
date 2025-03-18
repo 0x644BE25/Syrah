@@ -43,11 +43,11 @@ if (file.exists(r2out)) { if (file.rename(r2out,paste0(r2out,'.OLD'))) { cat(pas
 
 # INPUT
 if (endsWith(read1fastq,'gz')) {
-  nR1 <- as.integer(strsplit(system(paste('zcat',read1fastq,'| wc -l'),intern=TRUE),' ')[[1]][1])/4
-  nR2 <- as.integer(strsplit(system(paste('zcat',read2fastq,'| wc -l'),intern=TRUE),' ')[[1]][1])/4
+  nR1 <- as.integer(system(paste('zcat <',read1fastq,'| wc -l'),intern=TRUE))/4
+  nR2 <- as.integer(system(paste('zcat <',read2fastq,'| wc -l'),intern=TRUE))/4
 } else {
-  nR1 <- as.integer(strsplit(system(paste0('wc -l ',read1fastq),intern=TRUE),' ')[[1]][1])/4
-  nR2 <- as.integer(strsplit(system(paste0('wc -l ',read2fastq),intern=TRUE),' ')[[1]][1])/4
+  nR1 <- as.integer(system(paste('cat <',read1fastq,'| wc -l'),intern=TRUE))/4
+  nR2 <- as.integer(system(paste('cat <',read2fastq,'| wc -l'),intern=TRUE))/4
 }
 if (nR1!=nR2) { cat('Error: different numbers of reads in read1 and read2 fastqs'); exit() }
 
