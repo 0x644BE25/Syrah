@@ -65,7 +65,11 @@ Using a terminal in your Syrah directory, pass your manifest to Syrah with
 ```
 bash Syrah.sh tutorial_manifest.txt
 ```
-and that's it! Everything else should be handled by Syrah. If the pipeline is interrupted, it should start off after the last successful step. If you want to start from the beginning, delete the `intermediate_files` folder or set `resume=false` in the manifest file.
+or use this version to also save a copy of the terminal window output to a log file, which can help with troubleshooting
+```
+bash Syra.h tutorial_manifest.txt | tee -a syrah_output_log.txt
+```
+and that's it! Everything else should be handled by Syrah. If the pipeline is interrupted, you can use the prior command again to re-start after the last successful step. If that's not working right or you want to start from the beginning, delete the `intermediate_files` folder or set `resume=false` in `tutorial_manifest.txt`.
 
  Your Syrah folder should now have a PDF that will let you know how the analysis went and give you an idea of data quality.
 
