@@ -54,7 +54,8 @@ cd ..
 ## 3. Fill out manifest
 
 All the information that Syrah needs to run the pipeline is stored in the `manifest.txt` file. The main README has [details about specific manifest parameters](https://github.com/0x644BE25/Syrah/blob/main/readme.md#manifest-parameters) but for this tutorial the file `tutorial_manifest.txt` should have everything in the right place. 
-<details>**OPTIONAL:** Of necessity the unedited `tutorial_manifest.txt` uses local rather than global paths. It is **strongly** recommended to use global paths -- rather than relative paths -- when possible to avoid errors. [Learn about relative versus absolute paths here.](https://www.linuxbash.sh/post/understanding-absolute-and-relative-paths). Converting `tutorial_manifest.txt` to global paths is good practice to prepare for running Syrah on your own data! To find the global path to a given directory, navigate your terminal to (or open a terminal window at) the directory and use `pwd` </details>
+
+**OPTIONAL:** Of necessity the unedited `tutorial_manifest.txt` uses local rather than global paths. When possible it is recommended to use global paths instead of relative paths to avoid errors. [Learn about relative versus absolute paths here](https://www.linuxbash.sh/post/understanding-absolute-and-relative-paths). Converting `tutorial_manifest.txt` to global paths is good practice to prepare for running Syrah on your own data! To find the global path to a given directory, navigate your terminal to (or open a terminal window at) the directory and use `pwd` 
 
 ## 4. Run Syrah
 
