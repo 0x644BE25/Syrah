@@ -8,7 +8,7 @@ This tutorial will walk you through installing Syrah, building a genome referenc
 
 **Installing everything else:** If you're on MacOS or linux, you can install the dependencies using `install_dependencies.sh`. This will require some minimal use of the terminal and will install software with default options. For alternative installation options, see the [README](https://github.com/0x644BE25/Syrah/blob/main/readme.md). Steps:
 
-- 1 &ensp; Download Syrah's files to the directory where you want to install software <details>You can download a zip file of Syrah from [here](https://github.com/0x644BE25/Syrah/archive/master.zip), unzip it, and move the files from the unzipped `Syrah-main` folder (NOT the entire `Syrah-main` folder) to your install directory.</details>
+- 1 &ensp; Download Syrah's files to the directory where you want to install Syrah. <details>You can download a zip file of Syrah from [here](https://github.com/0x644BE25/Syrah/archive/master.zip), unzip it, and move the files from the unzipped `Syrah-main` folder (NOT the entire `Syrah-main` folder) to your install directory.</details>
 - 2 &ensp; Open a terminal window and navigate to your chosen install directory <details>**MacOS:** `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder` </details>
 - 3 &ensp; Run `bash install_dependencies.sh` **NOTE:** You will need to enter your user password and confirm some steps during installation, so watch the terminal. This process should take only a few mintues depending on your internet connection.
 
@@ -53,8 +53,8 @@ cd ..
 
 ## 3. Fill out manifest
 
-All the information that Syrah needs to run the pipeline is stored in the `manifest.txt` file. The main README has [details about specific manifest parameters](https://github.com/0x644BE25/Syrah/blob/main/readme.md#manifest-parameters), but for this tutorial the file `tutorial_manifest.txt` should have everything in the right place. 
-<details>Of necessity the unedited `tutorial_manifest.txt` uses local rather than global paths. It is **strongly** recommended to use global paths -- rather than relative paths -- when possible to avoid errors. [Learn about relative versus absolute paths here.](https://www.linuxbash.sh/post/understanding-absolute-and-relative-paths). Converting `tutorial_manifest.txt` to global paths is good practice to prepare for running Syrah on your own data! To find the global path to a given directory, navigate your terminal to (or open a terminal window at) the directory and use `pwd` </details>
+All the information that Syrah needs to run the pipeline is stored in the `manifest.txt` file. The main README has [details about specific manifest parameters](https://github.com/0x644BE25/Syrah/blob/main/readme.md#manifest-parameters) but for this tutorial the file `tutorial_manifest.txt` should have everything in the right place. 
+<details>**OPTIONAL:** Of necessity the unedited `tutorial_manifest.txt` uses local rather than global paths. It is **strongly** recommended to use global paths -- rather than relative paths -- when possible to avoid errors. [Learn about relative versus absolute paths here.](https://www.linuxbash.sh/post/understanding-absolute-and-relative-paths). Converting `tutorial_manifest.txt` to global paths is good practice to prepare for running Syrah on your own data! To find the global path to a given directory, navigate your terminal to (or open a terminal window at) the directory and use `pwd` </details>
 
 ## 4. Run Syrah
 
