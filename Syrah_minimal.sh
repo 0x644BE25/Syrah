@@ -45,8 +45,6 @@ do
     done < "${syrahDir}"paths.txt
   fi
   
-  cd "${writeDir}"
-  
   if [ ! -d "${writeDir}intermediate_files" ]; then
     mkdir "${writeDir}intermediate_files"
   fi
