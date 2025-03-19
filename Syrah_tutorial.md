@@ -67,7 +67,7 @@ bash Syrah.sh tutorial_manifest.txt
 ```
 or use this version to also save a copy of the terminal window output to a log file, which can help with troubleshooting
 ```
-bash Syra.sh tutorial_manifest.txt | tee -a syrah_output_log.txt
+bash Syrah.sh tutorial_manifest.txt | tee -a syrah_output_log.txt
 ```
 and that's it! Everything else should be handled by Syrah. If the pipeline is interrupted, you can use the prior command again to re-start after the last successful step. If that's not working right or you want to start from the beginning, delete the `intermediate_files` folder or set `resume=false` in `tutorial_manifest.txt`.
 
