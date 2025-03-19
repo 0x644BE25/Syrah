@@ -21,7 +21,7 @@ tar -zxf example_input_mouse_spleen_1M.tar.gz
 ```
 We'll need a genome reference to align to, so we will make a directory for our reference genome, move into it, download the FASTA and GTF files, and build our STAR index. Use your terminal to execute the following commands: 
 
-(These downloads are big and building the STAR index takes a while, so this is a great time to go get coffee. If you know you've got more cores available, you could bump up the `STAR` option `--runThreadN` accordingly. If you do increase the threads and the process hangs for >1 hr, go back to 1 thread.)
+(These downloads are big and building the STAR index takes a while and can be resource intensive. It's best not to do much else with your computer while STAR runs, so this is a great time to go get coffee. If you know you've got more cores available, you could bump up the `STAR` option `--runThreadN`, but if you do increase the threads and the process hangs for >1 hr, go back to 1 thread.)
 
 ```
 mkdir GRCm39_mouse_genome
