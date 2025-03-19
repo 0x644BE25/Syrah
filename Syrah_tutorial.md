@@ -21,18 +21,19 @@ tar -zxf example_input_mouse_spleen_1M.tar.gz
 ```
 We'll need a genome reference to align to, so we will make a directory for our reference genome, move into it, download the FASTA and GTF files, and build our STAR index. Use your terminal to execute the following commands: 
 
-(These downloads are big and building the STAR index takes a while, so this is a great time to go get coffee. If you know you've got more cores available, bump up the `STAR` option `--runThreadN` accordingly.)
+(These downloads are big and building the STAR index takes a while, so this is a great time to go get coffee. If you know you've got more cores available, you could bump up the `STAR` option `--runThreadN` accordingly. If you do increase the threads and the process hangs for >1 hr, go back to 1 thread.)
 
 ```
 mkdir GRCm39_mouse_genome
 cd GRCm39_mouse_genome
 
-curl -O https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.fna.gz
+curl --http1.0 -O https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.fna.gz
 gunzip GCF_000001635.27_GRCm39_genomic.fna.gz
 
-curl -O https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.gtf.gz
+curl --http1.0 -O https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.27_GRCm39/GCF_000001635.27_GRCm39_genomic.gtf.gz
 gunzip GCF_000001635.27_GRCm39_genomic.gtf.gz
 
+# this will tell the terminal where to look for the stuff we installed (like STAR)
 while IFS="" read -r p || [ -n "$p" ]; do; PATH=$p:$PATH; done < ../paths.txt
 
 STAR --runThreadN 2 \
