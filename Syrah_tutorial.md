@@ -34,7 +34,7 @@ curl --http1.0 -O https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_0
 gunzip GCF_000001635.27_GRCm39_genomic.gtf.gz
 
 # this will tell the terminal where to look for the stuff we installed (like STAR)
-while IFS="" read -r p || [ -n "$p" ]; do; PATH=$p:$PATH; done < ../paths.txt
+while IFS="" read -r p || [ -n "$p" ]; do PATH=$p:$PATH; done < ../paths.txt
 
 STAR --runThreadN 2 \
      --runMode genomeGenerate \
