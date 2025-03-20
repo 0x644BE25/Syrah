@@ -43,10 +43,6 @@ if [[ $OSTYPE == "darwin"* ]]; then
   echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/cb2350/.zprofile
   eval "$(/opt/homebrew/bin/brew shellenv)"
 
-  # then mas, xcode
-  brew install mas
-  mas install 497799835
-
   # then gcc and freetype
   brew install gcc
   brew install freetype
