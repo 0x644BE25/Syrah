@@ -1,6 +1,6 @@
 # Syrah Tutorial
 
-This tutorial will walk you through installing Syrah, building a genome reference, and running the Syrah pipeline on a test dataset provided by Curio.
+This tutorial will walk you through installing Syrah, building a genome reference, and running the Syrah pipeline on a test dataset provided by Curio. It will require ~ 3hours (depending on your internet connection) and ~ 20GB disk space, including temporary files.
 
 ## 1. Installation
 
