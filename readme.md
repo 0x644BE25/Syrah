@@ -9,6 +9,10 @@ preprint info and link here, maybe one summary figure
 
 This pipeline is intended to improve both the quantity and fidelity of usable data from Slide-seqV2 or Curio spatial transcriptomic datasets by correcting for two sources of error. We also hope that you find it easy to install and run.
 
+## QUICK START
+
+Try out the [Syrah tutorial]](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md) which will walk you through installation, building a reference, and running Syrah on some test data. It takes about 3 hours start-to-finish, with only about 5 minutes of hands-on time.
+
 ## Basic Usage
 
 If you want to add Syrah to your current pipeline, the process is simple. You'll need your read1 and read2 FASTQ files and the barcode coordinates file provided by the manufacturer.
