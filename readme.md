@@ -31,9 +31,11 @@ Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a
 
 #### Method A: Install it for me!
 
-If you're on MacOS or linux, you can install the dependencies using `install_dependencies.sh`. This will require some minimal use of the terminal and will install software with default options. If you would like to have more control, use installation **Method C: Manual** (below). Steps:
+**Installing R:** If you don't have a version of R installed, you will need to install one. Fortunately there are wonderful installers that make it very easy: [find one here](http://10.0.49.130:1417).
 
-- 1 &ensp; Download Syrah's files to the directory where you want to install software <details>You can download a zip file of Syrah from [here](https://github.com/0x644BE25/Syrah/archive/master.zip), unzip it, and move the files from the unzipped `Syrah-main` folder (NOT the entire `Syrah-main` folder) to your install directory.</details>
+**Installing everything else:** If you're on MacOS or linux, you can install the dependencies using `install_dependencies.sh`. This will require some minimal use of the terminal and will install software with default options. For alternative installation options, see the [README](https://github.com/0x644BE25/Syrah/blob/main/readme.md). Steps:
+
+- 1 &ensp; Download Syrah's files to the directory where you want to install Syrah. <details>You can download a zip file of Syrah from [here](https://github.com/0x644BE25/Syrah/archive/master.zip), unzip it, and move the files from the unzipped `Syrah-main` folder (NOT the entire `Syrah-main` folder) to your install directory.</details>
 - 2 &ensp; Open a terminal window and navigate to your chosen install directory <details>**MacOS:** `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder` </details>
 - 3 &ensp; Run `bash install_dependencies.sh` **NOTE:** You will need to enter your user password and confirm some steps during installation, so watch the terminal. This process should take only a few mintues depending on your internet connection.
 
