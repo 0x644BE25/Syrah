@@ -11,7 +11,7 @@ This pipeline is intended to improve both the quantity and fidelity of usable da
 
 ## QUICK START
 
-Try out the [Syrah tutorial]](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md) which will walk you through installation, building a reference, and running Syrah on some test data. It takes about 3 hours start-to-finish, with only about 5 minutes of hands-on time.
+Try out the [Syrah tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md) which will walk you through installation, building a reference, and running Syrah on some test data. It takes about 3 hours start-to-finish, with only about 5 minutes of hands-on time.
 
 ## Basic Usage
 
