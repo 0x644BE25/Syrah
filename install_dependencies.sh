@@ -68,7 +68,7 @@ tar -xzf UMI-tools-1.1.5.tar.gz
 cd UMI-tools-1.1.5
 pip3 install umi_tools==1.1.5
 
-umitools_path=$(pip3 show umi_tools | grep 'Location' | cut -d ' ' -f 2)
+umitools_path="/Users/$(whoami)"$(pip3 show umi_tools | grep 'Location' | cut -d ' ' -f 2)
 cd $syrahDir
 
 
