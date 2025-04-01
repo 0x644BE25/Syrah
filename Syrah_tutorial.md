@@ -10,7 +10,7 @@ This tutorial will walk you through installing Syrah, building a genome referenc
 
 - 1 &ensp; Download Syrah's files to the directory where you want to install Syrah. <details>You can download a zip file of Syrah from [here](https://github.com/0x644BE25/Syrah/archive/master.zip), unzip it, and move the files from the unzipped `Syrah-main` folder (NOT the entire `Syrah-main` folder) to your install directory.</details>
 - 2 &ensp; Open a terminal window and navigate to your chosen install directory <details>**MacOS:** `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder` </details>
-- 3 &ensp; Run `bash install_dependencies.sh` **NOTE:** You will need to enter your user password and confirm some steps during installation, so watch the terminal. This process should take only a few mintues depending on your internet connection.
+- 3 &ensp; Run `sudo bash install_dependencies.sh` **NOTE:** You will need to enter your user password and confirm some steps during installation, so watch the terminal. This process should take only a few mintues depending on your internet connection.
 
 ## 2. Download data files (~10 min)
 
