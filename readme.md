@@ -202,4 +202,4 @@ And that's -- you're done! You'll have a gene expression matrix called `batchNam
 
 Thanks for trying out Syrah :)
 
-This is an alpha release and there **WILL** be bugs! Don't hesitate to contact [Carolyn](mailto:cbrewster@stowers.org) (or through GitHub) if you have any questions or issues.
+This is an alpha release and there **WILL** be bugs! Don't hesitate to contact [Carolyn](mailto:cbrewster@stowers.org) (or through GitHub) if you have any questions or issues. The whole point of making Syrah is for *YOU* to be able to use it!
