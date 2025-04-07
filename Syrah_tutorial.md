@@ -4,7 +4,7 @@ This tutorial will walk you through installing Syrah, building a genome referenc
 
 ## 1. Installation (~10 min)
 
-**Installing R:** If you don't have a version of R installed, you will need to install one. Fortunately there are wonderful installers that make it very easy: [find one here](http://10.0.49.130:1417).
+**Installing R:** If you don't have a version of R installed, you will need to install one. Fortunately there are wonderful installers that make it very easy: [find one here](https://www.r-project.org/).
 
 **Installing everything else:** If you're on MacOS or linux, you can install the dependencies using `install_dependencies.sh`. This will require some minimal use of the terminal and will install software with default options. For alternative installation options, see the [README](https://github.com/0x644BE25/Syrah/blob/main/readme.md). Steps:
 
