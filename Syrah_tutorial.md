@@ -106,11 +106,12 @@ seu <- SCTransform(seu, assay="RNA", ncells=1000, verbose=TRUE, conserve.memory=
 seu <- RunPCA(seu)
 seu <- RunUMAP(seu, dims=1:30)
 seu <- FindNeighbors(seu, dims=1:30)
-seu <-  FindClusters(seu, resolution=0.2)
+seu <- FindClusters(seu, resolution=0.2)
 seu <- FindSpatiallyVariableFeatures(seu, assay="SCT", slot="scale.data", features=VariableFeatures(seu)[1:200], selection.method="moransi", x.cuts=100, y.cuts=100, verbose=TRUE, nfeatures=200)
 ```
- - Now you can use `saveRDS(seu,"curio_test_seurat_object.rds")` to save your new Seurat object. Repeat this process with the `nonSyrah` version of the data if desired!
+ - Now you can use `saveRDS(seu,"curio_test_seurat_object.rds")` to save your new Seurat object, and you're ready to proceed with analysis! Repeat this process with the `nonSyrah` version of the data if desired. **NOTE** We have used the same parameters as the Curio-seeker pipeline defaults for this dataset. It's _highly_ likely that you'll want to teak these when processing any other data.
 
+   
 ### Scanpy (Python)
 
 (!!!to do)
