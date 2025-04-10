@@ -77,15 +77,17 @@ and that's it! Everything else should be handled by Syrah. If the pipeline is in
 
 ## 5. What's next?
 
-Once Syrah completes you'll have a counts file that can be imported into your favorite analysis pipeline, along with the coordinates file that stores bead location data. Syrah omits these steps to minimize installation requirements, but we can use the script `generate_seurat_anndata_files.R` to create both a version for use with [R]()'s [Seurat package]() and a version appropriate for [Python]()'s [Scanpy library](). In addition to R, this will require the [Seurat]() and [SeuratDisk]() libraries. You can install Seurat with `install.packages(c("Seurat", "SeuratDisk"))`  and SeuratDisk with `if (!requireNamespace("remotes", quietly=TRUE)) { install.packages("remotes") }; remotes::install_github("mojaveazure/seurat-disk")`
+Once Syrah completes you'll have a counts file that can be imported into your favorite analysis pipeline, along with the coordinates file that stores bead location data. Syrah omits these steps to minimize installation requirements, but we can use the script `generate_seurat_and_anndata_files.R` to create both a version for use with [R]()'s [Seurat package]() and a version appropriate for [Python]()'s [Scanpy library](). In addition to R, this will require the [Seurat]() and [SeuratDisk]() libraries. You can install Seurat with `install.packages(c("Seurat", "SeuratDisk"))`  and SeuratDisk with `if (!requireNamespace("remotes", quietly=TRUE)) { install.packages("remotes") }; remotes::install_github("mojaveazure/seurat-disk",upgrade="never")`
 
 ##### Automated version
 
-Make sure you're in the same directory where you ran Syrah. You can tell it's the right directory if it contains the `curio_test_counts.tsv.gz` file. Now we simply pass our manifest to the script with 
+**NOTE:** Because it uses the `generate_seurat_and_anndata_files.R` script, this does not precisely replicate Curio-Seeker output data for the Curio example dataset. To do so, follow the [Manual instructions]() below. 
+
+ - Make sure you're in the same directory where you ran Syrah. You can tell it's the right directory if it contains the `curio_test_counts.tsv.gz` file. Now we simply pass our manifest to the script with 
 ```
 Rscript create_seurat_and_scanpy_files.R tutorial_manifest.txt
 ``` 
-And you're done!
+ - And you're done! `curio_test_data_seurat.rds` is for Seurat, `curio_test_data_anndata.h5a` is for Scanpy.
 
 ##### Manual version
 
@@ -102,26 +104,26 @@ seu <- CreateSeuratObject(counts=counts,project="curio_test_data")
  - Read the bead coordinates into the matrix `coords` with the bead barcodes as rownames, filter to the same beads as in the Seurat object, and add the bead coordinates as a "SPATIAL" dimensional reduction.
 ```
 coords <- as.matrix(read.delim("A0010_039_BeadBarcodes.txt",row.names=1,header=FALSE))
-coords <- as.matrix(coords[Cells(seu),]
+coords <- coords[Cells(seu),]
 colnames(coords) <- c("SPATIAL_1","SPATIAL_2")
+seu@reductions[["SPATIAL"]] <- CreateDimR     
 ``` 
  - Stardard processing: normalization, PCA, clustering, and finding spatially variable features.
 ```
 seu <- SCTransform(seu, assay="RNA", ncells=1000, verbose=TRUE, conserve.memory=TRUE)
 seu <- RunPCA(seu)
-seu <- RunUMAP(seu, dims=1:30)
 seu <- FindNeighbors(seu, dims=1:30)
 seu <- FindClusters(seu, resolution=0.2)
-seu <- FindSpatiallyVariableFeatures(seu, assay="SCT", slot="scale.data", features=VariableFeatures(seu)[1:200], selection.method="moransi", x.cuts=100, y.cuts=100, verbose=TRUE, nfeatures=200)
+seu <- RunUMAP(seu, dims=1:30)
+```
+ - Save the Seurat version
+ ```
+ saveRDS(seu,"curio_test_seurat_object.rds")
 ```
 - Create an AnnData version of the data for use with Python + Scanpy
 ```
-
- - Now you can use `saveRDS(seu,"curio_test_seurat_object.rds")` to save your new Seurat object, and you're ready to proceed with analysis! Repeat this process with the `nonSyrah` version of the data if desired. **NOTE** We have used the same parameters as the Curio-seeker pipeline defaults for this dataset. It's _highly_ likely that you'll want to teak these when processing any other data.
-
-   
-## References 
-<details>
-* https://zenodo.org/records/10655615
-* all main README references
-  </details>
+SaveH5Seurat(seu, filename=paste0(writeDir,batchName,"_nonSyrah_AnnData.h5Seurat"))
+Convert(paste0(writeDir,batchName,"_nonSyrah_AnnData.h5Seurat"), dest="h5ad")
+file.remove(paste0(writeDir,batchName,"_nonSyrah_AnnData.h5Seurat"))
+```
+ - All done! Onward to analysis. **NOTE** We have used the same parameters as the Curio-seeker pipeline defaults for this dataset. It's _highly_ likely that you'll want to teak these when processing any other data.
