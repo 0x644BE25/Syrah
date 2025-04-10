@@ -86,7 +86,7 @@ Here we'll create a Seurat object, add a spatial embedding, and do some basic pr
 In addition to R, you will need to have the [Seurat](https://satijalab.org/seurat/) library installed. Because it was originally developed for single-cell data, it refers to "cells" rather than "beads".
 
 
- - Setup: Make sure that you've started R (RStudio will do this automatically) and use `setwd("/path/to/mySyrahDirectory/")` to make sure you're in the same directory where you ran Syrah. You can tell it's the right directory if it contails the `curio_test_counts.tsv.gz` file. If you haven't yet installed the [Seurat](https://satijalab.org/seurat/) library, do so with `install.packaged("Seurat")`
+ - Setup: Once you've started R (RStudio will do this automatically) and use `setwd("/path/to/mySyrahDirectory/")` to make sure you're in the same directory where you ran Syrah. You can tell it's the right directory if it contains the `curio_test_counts.tsv.gz` file. If you haven't yet installed the [Seurat](https://satijalab.org/seurat/) library, do so with `install.packages("Seurat")`
 
  - Read in the expression matrix with genes = rows and beads = columns and put in in the variable `counts`, then filter to beads with at least 10 UMIs and use it to create a Seurat object.
 ```
