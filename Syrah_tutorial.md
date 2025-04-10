@@ -118,7 +118,7 @@ seu <- RunUMAP(seu, dims=1:30)
 ```
  - Save the Seurat version
  ```
- saveRDS(seu,"curio_test_seurat_object.rds")
+ saveRDS(seu,"curio_test_Seurat.rds")
 ```
 - Create an AnnData version of the data for use with Python + Scanpy
 ```
@@ -126,4 +126,4 @@ SaveH5Seurat(seu, filename=paste0(writeDir,batchName,"_nonSyrah_AnnData.h5Seurat
 Convert(paste0(writeDir,batchName,"_nonSyrah_AnnData.h5Seurat"), dest="h5ad")
 file.remove(paste0(writeDir,batchName,"_nonSyrah_AnnData.h5Seurat"))
 ```
- - All done! Onward to analysis. **NOTE** We have used the same parameters as the Curio-seeker pipeline defaults for this dataset. It's _highly_ likely that you'll want to teak these when processing any other data.
+ - The Seurat version is saved as `curio_test_data_Seurat.rds` and the Scanpy version is `curio_test_AnnData.h5ad` -- onward to analysis! You can now do the same with the non-Syrah version of the data, if desired (make sure to change the files names so you don't overwrite your files!). **NOTE** We have used the same parameters as the Curio-seeker pipeline defaults did for this dataset. It's _highly_ likely that you'll want to teak these when processing any other data.
