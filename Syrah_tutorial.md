@@ -77,16 +77,21 @@ and that's it! Everything else should be handled by Syrah. If the pipeline is in
 
 ## 5. What's next?
 
-Once Syrah completes you'll have a counts file that can be imported into your favorite analysis pipeline, along with the coordinates file that stores bead location data. Syrah omits these steps to minimize installation requirements. Here are brief instructions for a couple of popular options:
+Once Syrah completes you'll have a counts file that can be imported into your favorite analysis pipeline, along with the coordinates file that stores bead location data. Syrah omits these steps to minimize installation requirements, but we can use the script `generate_seurat_anndata_files.R` to create both a version for use with [R]()'s [Seurat package]() and a version appropriate for [Python]()'s [Scanpy library](). In addition to R, this will require the [Seurat]() and [SeuratDisk]() libraries. You can install Seurat with `install.packages(c("Seurat", "SeuratDisk"))`  and SeuratDisk with `if (!requireNamespace("remotes", quietly=TRUE)) { install.packages("remotes") }; remotes::install_github("mojaveazure/seurat-disk")`
 
-### Seurat (R)
+##### Automated version
 
-Here we'll create a Seurat object, add a spatial embedding, and do some basic processing with the same parameters used by the Curio-seeker pipeline. We will assume that you are working in an R environment, either from an [R session in your terminal](http://countbio.com/web_pages/left_object/R_for_biology/R_fundamentals/R_sessions.html), or an [IDE](https://www.codecademy.com/article/what-is-an-ide) such as [RStudio](https://posit.co/download/rstudio-desktop/). **NOTE** that all of the following code is **R** code, rather than bash terminal code like the previous sections.
+Make sure you're in the same directory where you ran Syrah. You can tell it's the right directory if it contains the `curio_test_counts.tsv.gz` file. Now we simply pass our manifest to the script with 
+```
+Rscript create_seurat_and_scanpy_files.R tutorial_manifest.txt
+``` 
+And you're done!
 
-In addition to R, you will need to have the [Seurat](https://satijalab.org/seurat/) library installed. Because it was originally developed for single-cell data, it refers to "cells" rather than "beads".
+##### Manual version
 
+Here will create a Seurat object, add a spatial embedding, and do some basic processing with the same parameters used by the Curio-seeker pipeline. We will assume that you are working in an R environment, either from an [R session in your terminal](http://countbio.com/web_pages/left_object/R_for_biology/R_fundamentals/R_sessions.html), or an [IDE](https://www.codecademy.com/article/what-is-an-ide) such as [RStudio](https://posit.co/download/rstudio-desktop/). **NOTE** that all of the following code is **R** code, rather than bash terminal code like the previous sections.
 
- - Setup: Once you've started R (RStudio will do this automatically) and use `setwd("/path/to/mySyrahDirectory/")` to make sure you're in the same directory where you ran Syrah. You can tell it's the right directory if it contains the `curio_test_counts.tsv.gz` file. If you haven't yet installed the [Seurat](https://satijalab.org/seurat/) library, do so with `install.packages("Seurat")`
+**NOTE:** Because Seurat was originally developed for single-cell data, it refers to "cells" rather than "beads".
 
  - Read in the expression matrix with genes = rows and beads = columns and put in in the variable `counts`, then filter to beads with at least 10 UMIs and use it to create a Seurat object.
 ```
@@ -109,13 +114,12 @@ seu <- FindNeighbors(seu, dims=1:30)
 seu <- FindClusters(seu, resolution=0.2)
 seu <- FindSpatiallyVariableFeatures(seu, assay="SCT", slot="scale.data", features=VariableFeatures(seu)[1:200], selection.method="moransi", x.cuts=100, y.cuts=100, verbose=TRUE, nfeatures=200)
 ```
+- Create an AnnData version of the data for use with Python + Scanpy
+```
+
  - Now you can use `saveRDS(seu,"curio_test_seurat_object.rds")` to save your new Seurat object, and you're ready to proceed with analysis! Repeat this process with the `nonSyrah` version of the data if desired. **NOTE** We have used the same parameters as the Curio-seeker pipeline defaults for this dataset. It's _highly_ likely that you'll want to teak these when processing any other data.
 
    
-### Scanpy (Python)
-
-(!!!to do)
-
 ## References 
 <details>
 * https://zenodo.org/records/10655615
