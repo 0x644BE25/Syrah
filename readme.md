@@ -199,7 +199,7 @@ And that's -- you're done! You'll have a gene expression matrix called `batchNam
 
 ### 4. After Syrah
 
-If desired, you can generate both Syrah- and Scanpy-compatible versions of the data by following the [Whats's next?](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md#5-whats-next) section from the [Syrah Tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md).
+If desired, you can generate both Syrah- and Scanpy-compatible versions of the data with `Rscript create_seurat_and_scanpy_files.R /path/to/my/manifest.txt` or follow along step-by-step in R with the [Whats's next?](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md#5-whats-next) section from the [Syrah Tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md).
 
 ## Questions? Problems? Reach out!
 
