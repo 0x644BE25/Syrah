@@ -201,9 +201,9 @@ And that's -- you're done! You'll have a gene expression matrix called `batchNam
 
 If desired, you can generate both Syrah- and Scanpy-compatible versions of the data with 
 ```
-Rscript create_seurat_and_scanpy_files.R /path/to/my/manifest.txt
+Rscript create_seurat_and_anndata_files.R /path/to/my/manifest.txt
 ```
-or follow along step-by-step in R with the [Whats's next?](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md#5-whats-next) section from the [Syrah Tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md).
+which will use the `minUMI` value from the manifest and default parameters for most functions. For more customized control, or simply to follow along step-by-step in R, see the [Whats's next?](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md#5-whats-next) section from the [Syrah Tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md).
 
 ## Questions? Problems? Reach out!
 
