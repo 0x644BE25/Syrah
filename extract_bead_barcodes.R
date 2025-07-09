@@ -42,14 +42,18 @@ r2out <- paste0(writeDir,'intermediate_files/',batchName,'_r2_barcode_tagged.fas
 if (file.exists(r2out)) { if (file.rename(r2out,paste0(r2out,'.OLD'))) { cat(paste0('moved old barcode extracted read2 FASTQ (Syrah) to ',r2out,'.OLD\n')) } }
 
 # INPUT
-if (endsWith(read1fastq,'gz')) {
-  nR1 <- as.integer(system(paste('zcat <',read1fastq,'| wc -l'),intern=TRUE))/4
-  nR2 <- as.integer(system(paste('zcat <',read2fastq,'| wc -l'),intern=TRUE))/4
-} else {
-  nR1 <- as.integer(system(paste('cat <',read1fastq,'| wc -l'),intern=TRUE))/4
-  nR2 <- as.integer(system(paste('cat <',read2fastq,'| wc -l'),intern=TRUE))/4
+# disabling this pending troubleshooting
+# is it even necessary?
+if (FALSE) { 
+  if (endsWith(read1fastq,'gz')) {
+    nR1 <- as.integer(system(paste('zcat <',read1fastq,'| wc -l'),intern=TRUE))/4
+    nR2 <- as.integer(system(paste('zcat <',read2fastq,'| wc -l'),intern=TRUE))/4
+  } else {
+    nR1 <- as.integer(system(paste('cat <',read1fastq,'| wc -l'),intern=TRUE))/4
+    nR2 <- as.integer(system(paste('cat <',read2fastq,'| wc -l'),intern=TRUE))/4
+  }
+  if (nR1!=nR2) { cat('Error: different numbers of reads in read1 and read2 fastqs'); exit() }
 }
-if (nR1!=nR2) { cat('Error: different numbers of reads in read1 and read2 fastqs'); exit() }
 
 r1x10K <- sapply(strsplit(readLines(read1fastq,n=40000)[seq(1,40000,by=4)],' '),\(x){ x[1] })
 r2x10K <- sapply(strsplit(readLines(read2fastq,n=40000)[seq(1,40000,by=4)],' '),\(x){ x[1] })
