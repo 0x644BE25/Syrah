@@ -130,7 +130,7 @@ repeat({
   }
   totalReads <- totalReads+length(r1seqs)
   if (totalReads%%(10^6)==0) { cat('  ',format(as.POSIXlt(Sys.time())),' ',totalReads,'reads processed\n') }
-  if (length(r1seqs)<batchSize | totalReads==nR1) { break() }
+  if (length(r1seqs)<batchSize) { break() }
 })
 close(conR1)
 close(conR2)
