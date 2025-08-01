@@ -106,7 +106,7 @@ seu <- CreateSeuratObject(counts=counts,project="curio_test_data")
 coords <- as.matrix(read.delim("A0010_039_BeadBarcodes.txt",row.names=1,header=FALSE))
 coords <- coords[Cells(seu),]
 colnames(coords) <- c("SPATIAL_1","SPATIAL_2")
-seu@reductions[["SPATIAL"]] <- CreateDimR     
+seu@reductions[["SPATIAL"]] <- CreateDimReduc(coords)     
 ``` 
  - Stardard processing: normalization, PCA, clustering, and finding spatially variable features.
 ```
