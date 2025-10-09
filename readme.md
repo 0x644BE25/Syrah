@@ -1,212 +1,83 @@
-Syrah: A utility to maximize Slide-seq & Curio Seeker data
-==============
+# Syrah
+Syrah is an R package that provides read 1 error correction for [Slide-seqV2](https://www.nature.com/articles/s41587-020-0739-1) and [Curio Seeker](https://curiobioscience.com/seeker/) spatial transcriptomic data. 
 
-**Author:** [Carolyn Brewster](mailto:cbrewster@stowers.org)
+**NOTE:** This is the R package version of Syrah that only corrects the read 1 FASTQ and is intended for use in conjunction with a standard [Slide-seqV2](https://broadinstitute.github.io/warp/docs/Pipelines/SlideSeq_Pipeline/README) or Curio Seeker analysis pipeline. If you are looking for the standalone analysis pipeline, it is [here](https://github.com/0x644BE25/Syrah).
 
-preprint info and link here, maybe one summary figure
+## Installation
+You will need to have [R](https://www.r-project.org/) and [devtools](https://www.rdocumentation.org/packages/devtools/versions/2.4.5) installed, then run
+```
+library(devtools)
+install_github("0x644BE25/Syrah")
+```
 
-### PURPOSE
 
-This pipeline is intended to improve both the quantity and fidelity of usable data from Slide-seqV2 or Curio spatial transcriptomic datasets by correcting for two sources of error. We also hope that you find it easy to install and run.
-
-## QUICK START
-
-Try out the [Syrah tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md) which will walk you through installation, building a reference, and running Syrah on some test data. It takes about 3 hours start-to-finish, with only about 5 minutes of hands-on time.
+## Inputs
+Syrah takes as input the tab-delimited bead coordinates file and the read 1 FASTQ file.
 
 ## Basic Usage
+```
+library(Syrah)
+syrah(coords_file="coodinates_file.tsv", r1_fastq="read1_file.fastq")
+```
 
-If you want to add Syrah to your current pipeline, the process is simple. You'll need your read1 and read2 FASTQ files and the barcode coordinates file provided by the manufacturer.
-
--   1  &ensp; Have [R](https://www.r-project.org/) with the [dbscan](https://github.com/mhahsler/dbscan) library installed (R v.4.4.1 was used in development, but nearly any version should work)
--   2  &ensp; Download Syrah's code
--   3  &ensp; Fill out `manifest_minimal.txt`
--   4  &ensp; Run  `Syrah_minimal.sh /path/to/your/manifest_minimal.txt`
-
-That's it! You'll now have a read 2 FASTQ with corrected barcodes and UMIs appended to the sequence ID e.g. `seqID_beadbarcode_UMI`. Continue on with your pipeline as usual, ensuring that bead barcodes and UMIs are taken from the end of the sequnce ID.
-
-**NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from <https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz> You'll simply need a mouse genome and GTF such as [GRCm39](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001635.27/) for alignment (but not if you just care about `Syrah_minimal.sh`). 
+## Output
+Syrah will output a bead deduplication map text file, a barcode whitelist file, and a corrected read 1 FASTQ with a filename ending in `.r1syrah`
+This corrected read 1 FASTQ can now be input into your spatial transcriptomic pipeline of choice along with the original read 2 FASTQ and coordinates file.
 
 
-## Standalone Analysis Pipeline Usage
+<details>
+  
+<summary>Advanced Usage</summary>
 
-Using the Syrah pipeline in lieu of the Slide-seq or Curio Seeker pipelines is a bit more involved, but we hope that it is at least as easy to install and use. Here are the steps:
+## Advanced Usage
+Syrah has three steps, and the `Syrah()` function is simply a wrapper for them. The steps can be run independently, if desired. This may be useful if you wish to use the same barcode whitelist for several read 1 FASTQs from the same puck or tile, such as if you have multiple lanes of the same library on a flowcell.
 
-### 1. Installation
+#### Step 1: Barcode deduplication
+This step uses the barcode file to find beads with impossibly close x,y distance and barcodes one nucleotide apart. These groups of beads are virtual duplications, so Syrah reroutes all barcodes in the group to a single one.
+```
+make_bead_dedup_map(coords_file="coodinates_file.tsv")
+```
+This will output a text file of the deduplication mapping with the same name as the coordinates file but with `_dedup_map.txt` appended.
 
-#### Method A: Install it for me!
+#### Step 2: Barcode whitelist generation
+This step uses the barcode file and deduplication map (from the previous step) to generate a whitelist of all acceptable barcode matches. This whitelist automatically redirects duplicated beads when matching.
+```
+make_barcode_whitelist(dedup_map="coordinates_file.tsv_dedup_map.txt", coods_file="coordinates_file.tsv")
+```
+This will output a text file of the barcode matching whitelist with the same name as the coordinates file but with `_whitelist.txt` appended.
 
-**Installing R:** If you don't have a version of R installed, you will need to install one. Fortunately there are wonderful installers that make it very easy: [find one here](http://10.0.49.130:1417).
+#### Step 3: Barcode correction
+This step uses the barcode whitelist (from the previous step) and the read 1 FASTQ to generate a corrected read 1 FASTQ.
+```
+correct_barcodes(whitelist="coordinates_file.tsv_whitelist.txt", r1_fastq="read1_file.fastq")
+```
+This will output a corrected read 1 FASTQ with the same name as the original read 1 FASTQ but with `.r1syrah` appended. This FASTQ has the same reads in the same order as the original read 1 FASTQ, such that it is still a proper pair with the original read 2 FASTQ. It can now be used as input to your analysis pipeline of choice, such as the [WARP Slide-seq pipeline](https://broadinstitute.github.io/warp/docs/Pipelines/SlideSeq_Pipeline/README) which is also available for use in the cloud via [Terra](https://app.terra.bio/) at the [Slide-seq public workspace](https://app.terra.bio/#workspaces/warp-pipelines/Slide-seq). 
 
-**Installing everything else:** If you're on MacOS or linux, you can install the dependencies using `install_dependencies.sh`. This will require some minimal use of the terminal and will install software with default options. For alternative installation options, see the [README](https://github.com/0x644BE25/Syrah/blob/main/readme.md). Steps:
+</details>
 
-- 1 &ensp; Download Syrah's files to the directory where you want to install Syrah. <details>You can download a zip file of Syrah from [here](https://github.com/0x644BE25/Syrah/archive/master.zip), unzip it, and move the files from the unzipped `Syrah-main` folder (NOT the entire `Syrah-main` folder) to your install directory.</details>
-- 2 &ensp; Open a terminal window and navigate to your chosen install directory <details>**MacOS:** `Applications > Utilities > Terminal.app` and navigate to the folder where you want to install software, OR right-click on the folder where you want to install software and choose `New Terminal at Folder` </details>
-- 3 &ensp; Run `sudo bash install_dependencies.sh` **NOTE:** You will need to enter your user password and confirm some steps during installation, so watch the terminal. This process should take only a few mintues depending on your internet connection.
-
-
-#### Method B: Singularity
-
-Singularity is a container platform which allows you to build an encapsulated software environment ("container") that has all software components installed with the proper versions and configurations. If you do not already have Singularity (if working on a shared compute resource you should check), you will need to install it first.
-
--   [Linux installation instructions](https://apptainer.org/user-docs/master/quick_start.html#quick-installation-steps)
--   [MacOS installation instructions](https://docs.sylabs.io/guides/3.5/admin-guide/installation.html#macOS)
--   [Windows installation instructions](https://docs.sylabs.io/guides/3.5/admin-guide/installation.html#windows) are a bit more involved due to the need for a virtual machine.
-
-Once Singularity is installed and working, download the pre-built container from [the Syrah v2.0.0-alpha release](https://github.com/0x644BE25/Syrah/releases/download/v2.0.0-alpha/Syrah-v2.0.0.sif)
-
-**NOTE:** Scripts you run using Singularity will always have access to files in your user folder, but if you are reading or writing data in a different folder, you may need to [enable access to it using the `--bind` command](https://apptainer.org/user-docs/master/quick_start.html#working-with-files).
-
-#### Method C: Manual
-
-Other than the programming language R, Syrah relies on several common bioinformatics tools. You will need the following software (if you are working on a shared compute resource, you should check if you already have some or all of them). Versions in parenthesis are those used during pipeline development, but most relatively recent (and possibly quite old) versions are likely to work as well:
-
--   [R](https://www.r-project.org/) (v4.4.1) and the R package [dbscan](https://github.com/mhahsler/dbscan)
-
-    **NOTE:** if incorporating Syrah's barcode correction into your own pipeline, this is the only dependency. `Syrah_minimal.sh` will output a read 2 FASTQ with corrected bead barcodes and UMIs appended to the sequence IDs. If that's all you need, you're good just with R and dbscan.
-
--   [Samtools](https://www.htslib.org/download) (v1.20)
-
--   [STAR aligner](https://github.com/alexdobin/STAR) (v2.7.10b)
-
--   [UMI-tools](https://umi-tools.readthedocs.io/en/latest/INSTALL.html) (v1.1.5)
-
--   [Subread](https://subread.sourceforge.net/) (v2.0.2)
-
-**PATHS:** Syrah needs to know where to find the software you've installed. The auto-installer will do this for you, but for manual installation you'll need to provide it yourself. Create a file named `paths.txt` and add the path to each piece of software on its own line. Here's an example `paths.txt` that is likely close to what you need:
-
-> /Users/myUsername/syrah_install_folder/samtools-1.20/bin \
-> /Users/myUsername/Library/Python/3.9/lib/python/site-packages \
-> /Users/myUsername/syrah_install_folder/STAR-2.7.10b/bin \
-> /Users/myUsername/syrah_install_folder/subread-2.0.2-macOS-x86_64/bin
-
-Once the pre-requisites are installed, you're basically done. Just [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the Syrah git repository to your desired location. Don't have `git` installed? No problem. Just copy the `.R` and `.sh` files manually to your desired location. Install complete!
-
-### 2. Input files
-
-**NEED TEST DATA?** The Curio Seeker test dataset is small, formatted correctly, and available from <https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz> You'll simply need a mouse genome and GTF such as [GRCm39](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001635.27/) for alignment (but not if you just care about `Syrah_minimal.sh`). 
-
-We've tried to choose a minimal set of starting data that uses the most frequently published "raw" files. However, Syrah's barcode correction step does require a read 1 FASTQ that has not yet had the barcode extracted. If your read 1 FASTQ has reads of 42-44 nt long, you should be good to go. The total input data is:
-
--   **Read 1 and read 2 FASTQ files:** These can be either zipped (.fastq.gz) or unzipped (.fastq). Read 1 and read 2 FASTQs must be in the same order, but this is generally how they are made. If you have multiple lanes in your sample, make sure to concatenate all the read 1 FASTQs together and all the read 2 FASTQs together so that you begin with two FASTQ files. If you are starting with BCL files instead, convert them to FASTQs with something like Illumina's [blc2fastq](https://support.illumina.com/content/dam/illumina-support/documents/documentation/software_documentation/bcl2fastq/bcl2fastq2-v2-20-software-guide-15051736-03.pdf).
--   **Bead barcode + coordinates file:** This should have three tab-delimited columns (barcode, x, y) with no headers.
--   **Reference genome:** You will need a path to both a STAR index (will be a directory) and a matching .gtf file (not required for `Syrah_minimal.sh`).
--   **Manifest file:** This contains the parameters for the pipeline. If you have multiple samples to process, create a manifest for each and then you can give all the paths as input to the script (i.e. `/path/to/myWorkingDir/*_manifest.txt`). The parameters in the manifest are as follows:
-
-#### Manifest parameters
+<details>
+  
+  <summary> Parameters </summary>
+  
+## Parameters
 
 | Parameter name      | Description                                                                                                                                                                                                                                                                    | Example                                    |
 |------------------|----------------------------|--------------------------|
-| `batchName`         | A name to be used for this batch of data.                                                                                                                                                                                                                                      | `"test_data"`                              |
-| `writeDir`          | Path to an **existing** directory where Syrah should write files. Make sure the directory has the proper permissions for Syrah to write to it!                                                                                                                                 |                                            |
-| `read1fastq`        | Path to read 1 FASTQ file, zipped or not. Read 1 is the read that contains barcode and UMI information, probably 42-44 nucleotides long.                                                                                                                                       | `"/path/to/myWorkingDir/r1.fastq"`         |
-| `read2fastq`        | Path to read 2 FASTQ file, zipped or not. Read 2 contains the "biological" sequence data, probably 50-100 nucleotides long.                                                                                                                                                    | `"/path/to/myWorkingDir/r2.fastq"`         |
-| `puckFile`          | Path to a tab-delimited file with **no header** containing three columns: bead barcodes, x coordinates, y coordinates.                                                                                                                                                         | `"/path/to/myWorkingDir/coordinates.txt"`  |
-| `STARindex*`        | Path to a STAR aligner index directory for the desired refrence genome or transcriptome. The [STAR manual](https://raw.githubusercontent.com/alexdobin/STAR/master/doc/STARmanual.pdf) has information on how to index a reference in the "Generating genome indexes" section, or try the [Syrah Tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md) | `"/my/genomes/Gal_gal/STAR/"`              |
-| `gtf*`              | Path to a GTF file corresponding to the `STARindex`                                                                                                                                                                                                                            | `"/my/genomes/Gal_gal/GRCg7b.Ens_110.gtf"` |
-| `syrahDir`          | Path to directory where Syrah code is located. Make sure the directory has the proper permissions for code to be executed from it!                                                                                                                                             | `"/path/to/syrah/code/"`                   |
-| `nCores`            | Maximum number of CPU cores to be used. If in doubt, use 1 (it'll be slow, though).                                                                                                                                                                                            | `1`                                        |
-| `maxLinkerDistance` | Maximum allowd linker distance (comprised of deletions and 0 or 1 substitutions). Reads that fail to meet this criteria are discarded. A value of 5 is recommended based on [link to that part of the preprint]                                                                | `5`                                        |
-| `doNonSyrah`        | Should the pipeline also use a generic process to output data comparable to that of the standard Curio Seeker or Slide-seqV2 pipeline? This will take additional time, but will allow for the comparison of results. This should be either `true` or `false`.                  | `true`                                     |
-| `resume`            | If restarting the pipeline after a failure, should Syrah look for previous files and attempt to pick up where the last run left off? Must be `true` or `false`, defaults to `false` if no value provided.                                                                      | `true`                                     |
-| `minUMI*`            | Minimum UMI threshold for including beads in the final data. This only matters for the graphical outputs and (optional) creating Seurat- and Scanpy-compatible files.                                                                                                                                                   | `10`                                       |
+| `coords_file`         | Path to a tab-delimited file containing the barcodes and coordinates for the puck | `"/path/to/myWorkingDir/coordinates.txt"` |
+| `r1_fastq`          | Path to the read 1 FASTQ file, or a comma-delimited list of read 1 FASTQ files | `"path/to/myWorkingDir/read_1.fastq"` |
+| `write_dir`        | (optional) Directory to write to. Defaults to current working directory. | `"/path/to/myWorkingDir/"`  |
+| `n_cores`        | (optional) Number of CPU cores to use. Defaults to 1.  | `1`         |
+| `max_slide_dist`          | (optional) Maxium allowable slide distance between beads to consider them duplicated. You are very unlikely to need to change this. Defaults to 10. | `10`  |
+| `max_linker_dels`          | (optional) Maximum allowable number of deletions for an acceptable linker match. You are unlikely to need to change this. Defaults to 5. | `5`  |
+| `batch_size`          | (optional) Number of reads to process at once.  You are very unlikely to need to change this. Defaults to 10^5. | `10^5`  | 
 
-`*` = **Not** required for `Syrah_minimal.sh`
+</details>
 
-Use the `manifest.txt` file as a template, pay attention to local vs global paths, and ensure that strings are quoted.
+<details>
+<summary> Test data</summary>
+  
+## Test data
 
-### 3. Running Syrah
+Official [Curio Seeker test data](https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz) contains both FASTQ files and the bead coordinate file.
 
-As with installation, there are two ways to run Syrah: an automated way and a manual method. The manual method is helpful for troubleshooting, while the automated method allows for high-throughput processing of many datasets.
-
-#### Method A: Automated
-
-All you need to do is pass your manifest file(s) to `Syrah.sh`:
-
-`bash /path/to/syrahDir/Syrah.sh /path/to/my_manifest.txt` for a single manifest, or possibly `bash /path/to/syrahDir/Syrah.sh /path/to/*_manifest.txt` for many manifests.
-
-**SINGULARITY USERS:** use `Singularity exec /path/to/Syrah-v2.0.0.sif /path/to/Syrah.sh /path/to/my_manifest.txt` instead.
-
-#### Method B: Manual
-
-I promise it's not as daunting as this schematic makes it look! You just run each command in order, passing your manifest file as the only parameter each time.
-
-![Syrah schematic.](https://github.com/0x644BE25/Syrah/blob/main/simple_Syrah_schematic.png?raw=true "Syrah schematic")
-
-**SINGULARITY USERS:** The best way to run Syrah manually is to start a [Singluarity shell](https://docs.sylabs.io/guides/3.1/user-guide/cli/singularity_shell.html) and then run the commands in it, so start with `singularity shell /path/to/Syrah-v2.0.0.sif` using [`--bind`](https://apptainer.org/user-docs/master/quick_start.html#working-with-files) as needed to ensure access to files not in your home directory. To end the Singularity shell when you're all finished, use `exit`.
-
-**NON-SINGULARITY USERS:** Just skip the above step, but make sure you've [added the install locations for the dependencies to your `$PATH`](https://linuxize.com/post/how-to-add-directory-to-path-in-linux/) so that they can be called from the command line (this should have occurred during installation).
-
-The commands to run each step of the Syrah pipeline in order are
-
--   1 &ensp; **`Rscript /path/to/syrahDir/determine_version.R /path/to/my_manifest.txt`**
-
-    <details>This step uses the first 100K read 1 sequences to estimate the nucleotide frequency at each position along read 1. Syrah determines which version of capture oligonculeotide was used on the beads on the puck in order to find the expected positions of the both parts of the bead barcode as well as the UMI. There will be a plot in the `intermediate_files` directory showing the nucleotide frequencies and barcode/UMI positions (`B`=bead barcode, `U`=UMI). A nucleotide frequency barplot with colors indicating A, C, G, or T. The x-axis indicates position along read 1, from 5' on the left to 3' on the right, with letters indicating the position of the bead barcode (B) and UMI (U).
-       &nbsp; 
-       
-    **KEY OUTPUT FILES:** `estimated_read_1_nucleotide_frequencies.csv`, `r1_pattern.txt`, `r1_version.txt`</details>
-
--   2 &ensp; **`Rscript /path/to/syrahDir/create_bead_deduplication_map.R /path/to/my_manifest.txt`**
-
-    <details>This step uses the bead coordinates file to find virtually duplicated beads. These "beads" are less than one bead diameter apart in x,y space and have barcodes that differ by one nucleotide substitution. The groups of virtually duplicated beads will be used by `generate_bead_whitelist.R` to "de-duplicate" the beads so that all reads from that group are assigned to a single bead.
-    &nbsp; 
-       
-    **KEY OUTPUT FILES:** `deduplication_map.txt`</details>
-
--   3 &ensp; **`Rscript /path/to/syrahDir/generate_bead_barcode_whitelist.R /path/to/my_manifest.txt`**
-
-    <details>This step uses the bead coordinates file and the deduplication map from the previous step to generate valid matches for each bead barcode. Valid matches may have one nucleotide deletion or one substitution. If a match has a deletion that occurs in the first part of the barcode, it will be 13 nucleotides long instead of the usual 14. If `doNonSyarh=true`, a second whitelist will be made without bead deduplication and only allowing one nucleotide substitution (no deletions). This will be used for barcode error correction during the barcode extraction step.
-    &nbsp; 
-       
-    **KEY OUTPUT FILES:** `barcode_whitelist.txt`, `barcode_whitelist_nonSyrah.txt` (if `doNonSyrah=true`)</details>
-
--   4 &ensp; **`Rscript /path/to/syrahDir/extract_bead_barcodes.R /path/to/my_manifest.txt`**
-
-    <details>This step takes barcode and UMI sequences from read 1 and appends them to the sequence ID in read 2. Syrah uses fuzzy matching to find the location of the invariant linker sequence between barcode parts 1 and 2 and uses this to determine the correct location of the barcode and UMI. The barcode sequence is then matched agains the whitelist from the previous step to correct and deduplicate the bead barcodes before appending the barcode and UMI to the sequence ID of the corresponding read 2. Reads lacking a high-confidnce linker position or valid bead barcode are discarded.
-    &nbsp; 
-    If `doNonSyrah=true` the non-Syrah version always takes the barcode and UMI from the canonically expected positions and matches agains the non-Syrah whitelist. It also appends the barcode and UMI to the read 2 sequence ID and discards reads without a valid barcode. 
-    &nbsp; 
-       
-    **KEY OUTPUT FILES:** `r2_barcode_tagged.fastq`, `r2_barcode_tagged_nonSyrah.fastq` (if `doNonSyrah=true`)</details>
-
-    **NOTE:** This is the end of the minimal Syrah pipeline, when you reach a barcode corrected and UMI tagged read 2 FASTQ.
-
--   5 &ensp; **`bash /path/to/syrahDir/STAR_alignment.sh /path/to/my_manifest.txt`**
-
-    <details>This step uses the STAR aligner to align the barcode corrected and tagged read 2 FASTQ to the reference genome or transcriptome. You can modify the alignment parameters in the `STAR_alignment.sh` file.
-    &nbsp; 
-       
-    **KEY OUTPUT FILES:** `Aligned.sortedByCoord.out.bam`, `nonSyrah_Aligned.sortedByCoord.out.bam` (if `doNonSyrah=true`)</details>
-
--   6 &ensp; **`bash /path/to/syrahDir/quantify_counts.sh /path/to/my_manifest.txt`**
-
-    <details>This step first uses Subread's `featureCounts` function to assign reference-aligned reads to the gene features present in your GTF file. Then the BAM is sorted and indexed so that the UMI-tools function `count` can generate a digital gene expression matrix with genes/transcripts as the rows and beads as the columns.
-    &nbsp; 
-       
-    **KEY OUTPUT FILES:** `counts.tzv.gz`, `nonSyrah_counts.tsv.gz` (if `doNonSyrah=true`)</details>
-
--   7 &ensp; **`Rscript /path/to/syrahDir/graphical_outputs.R /path/to/my_manifest.txt`**
-
-    <details>This step first uses can generates a PDF with some summary and QA plots for the final data, showing info for eithat all beads in the dataset (>=1 UMIs) or those with at least 25 reads (>=25 UMIs).
-       &nbsp; 
-       
-       **KEY OUTPUT FILES:** `Syrah_results_summary.pdf`, `nonSyrah_results_summary.pdf` (if `doNonSyrah=true`)</details>
-
-And that's -- you're done! You'll have a gene expression matrix called `batchName_counts.txt.gz` and a result summary called `batchName_Syrah_results_summary.pdf` (and ones for the non-Syrah version if `doNonSyrah=true`). There's a directory called `intermediate_files` which contains precisely that and can be deleted if you're sure everything went as planned. Here's an example of what the results summary looks like:
-&nbsp; 
-
-![example Syrah results summary](https://github.com/0x644BE25/Syrah/blob/main/example_Syrah_results_summary.png?raw=true)
-&nbsp; 
-
-### 4. After Syrah
-
-If desired, you can generate both Syrah- and Scanpy-compatible versions of the data with 
-```
-Rscript create_seurat_and_anndata_files.R /path/to/my/manifest.txt
-```
-which will use the `minUMI` value from the manifest and default parameters for most functions. For more customized control, you can edit `create_seurat_and_anndata_files.R` or process the data step-by-step in R with the [Whats's next?](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md#5-whats-next) section from the [Syrah Tutorial](https://github.com/0x644BE25/Syrah/blob/main/Syrah_tutorial.md).
-
-## Questions? Problems? Reach out!
-
-Thanks for trying out Syrah :)
-
-This is an alpha release and there **WILL** be bugs! Don't hesitate to contact [Carolyn](mailto:cbrewster@stowers.org) (or through GitHub) if you have any questions or issues. The whole point of making Syrah is for *YOU* to be able to use it!
+</details>
