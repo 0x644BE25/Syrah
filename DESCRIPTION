@@ -1,0 +1,10 @@
+Package: Syrah
+Type: Package
+Title: Read 1 error correction for Slide-seqV2 and Curio Seeker spatial transcriptomic data
+Authors@R: 
+    person('C','Brewster', ,'cbrewster@stowers.org', role='cre')
+Version: 3.0.0
+Description: Syrah corrects for missing nucleotides and uses deletion-aware matching to improve barcode fidelity and eliminate ambiguous reads in Slide-seqV2 or Curio Seeker read 1 data.
+Imports: dbscan, parallel
+Encoding: UTF-8
+RoxygenNote: 7.3.2
