@@ -21,12 +21,6 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
  # PARAMS ==================================
   nts <- c('A','C','G','T')
   
-  # barcode matching
-  bcPart1length <- 8
-  bcPart2start <- bcPart1length+1
-  bcLength <- 14
-  r1bc2end <- bcLength+nchar(linker)
-  
   # computational parameters
   batchSize <- 10^5
   
@@ -34,6 +28,12 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   linker <- 'TCTTCAGCGTTCCCGAGA'
   maxSubs <- 1
   maxLinkerDels <- max_linker_dels
+
+  # barcode matching
+  bcPart1length <- 8
+  bcPart2start <- bcPart1length+1
+  bcLength <- 14
+  r1bc2end <- bcLength+nchar(linker)
   
   # STRING METHODS =========================
   del1 <- function(seq,pos=1:nchar(seq)) {
