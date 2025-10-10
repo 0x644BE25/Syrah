@@ -30,10 +30,10 @@ make_barcode_whitelist <- function(dedup_map,coords_file,write_dir='.',n_cores=1
       paste0(seq2[-x],collapse='') })
     
     del2 <- c(sapply(sapply(bcPart2start:bcLength,function(x){
-      paste0(seq2[-x],collapse='')}),\(y){ paste0(y,nts) }))
+      paste0(seq2[-x],collapse='')}),function(y){ paste0(y,nts) }))
     
     sub <- c(sapply(1:bcLength,function(x) {
-      sapply(nts,\(nt){ curr <- seq2; curr[x] <- nt; paste0(curr,collapse='') }) }))
+      sapply(nts,function(nt){ curr <- seq2; curr[x] <- nt; paste0(curr,collapse='') }) }))
     
     delOrSub <- unique(c(del1,del2,sub))
     delOrSub <- delOrSub[delOrSub!=seq]
@@ -43,7 +43,7 @@ make_barcode_whitelist <- function(dedup_map,coords_file,write_dir='.',n_cores=1
   do1sub <- function(seq) {
     seq2 <- strsplit(seq,'')[[1]]
     sub <- c(sapply(1:bcLength,function(x) {
-      sapply(nts,\(nt){ curr <- seq2; curr[x] <- nt; paste0(curr,collapse='') }) }))
+      sapply(nts,function(nt){ curr <- seq2; curr[x] <- nt; paste0(curr,collapse='') }) }))
     
     return(sub)
   }
