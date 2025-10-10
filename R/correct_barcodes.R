@@ -38,15 +38,15 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   # STRING METHODS =========================
   del1 <- function(seq,pos=1:nchar(seq)) {
     seq2 <- strsplit(seq,'')[[1]]
-    return(sapply(pos,\(i){
+    return(sapply(pos,function(i){
       paste0(seq2[-i],collapse='')
     }))
   }
   
   sub1 <- function(seq,pos=1:nchar(seq),nts=c('A','C','G','T')) {
     seq2 <- strsplit(seq,'')[[1]]
-    return(c(sapply(pos,\(i){
-      sapply(nts,\(nt){
+    return(c(sapply(pos,function(i){
+      sapply(nts,function(nt){
         curr <- seq2; curr[i] <- nt; paste0(curr,collapse='')
       })
     })))
@@ -79,7 +79,7 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   linkerMatches <- doMaxNdelMsub(linker,maxLinkerDels,maxSubs,nts=c('A','C','G','T','N'))
   
   # BARCODE MATCHES ========================
-  barcodes <- unlist(lapply(readLines(whitelist),\(x){
+  barcodes <- unlist(lapply(readLines(whitelist),function(x){
     x <- strsplit(x,'\t')[[1]]
     froms <- strsplit(x[2],',')[[1]]
     res <- setNames(rep(x[1],length(froms)),froms)
@@ -93,7 +93,7 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
                bc2start=(bcPart1length+nchar(linker)+1),
                bc2end=r1bc2end)
   coeff <- c(0,0,1,1,1)
-  r1coords <- do.call(rbind,lapply(0:maxLinkerDels,\(dels){
+  r1coords <- do.call(rbind,lapply(0:maxLinkerDels,function(dels){
     rbind(basepos-(coeff*dels),
           (basepos-1)-(coeff*dels))
   }))
