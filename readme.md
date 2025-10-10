@@ -78,7 +78,7 @@ This will output a corrected read 1 FASTQ with the same name as the original rea
   
 ## Test data
 
-The [Curio Seeker](https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/example_input_mouse_spleen_1M.tar.gz) and [Slide-seqV2](https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/planarian_test_data.tar.gz) test data files contain FASTQ files downsampled to 1 million reads and the corresponding barcode/coordinates file. Simply unzip and un-tar the files. [Test data README](https://github.com/0x644BE25/Syrah/blob/main/test_data/README.txt)
+The [Curio Seeker test data](https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/example_input_mouse_spleen_1M.tar.gz) and [Slide-seqV2 test data](https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/planarian_test_data.tar.gz) archive files contain FASTQ files downsampled to 1 million reads and the corresponding barcode/coordinates file. Simply unzip and un-tar the files. [Test data README](https://github.com/0x644BE25/Syrah/blob/main/test_data/README.txt)
 
 The Curio Seeker test data is a mirror of the official [Curio Seeker test data](https://curioseekerbioinformatics.s3.us-west-1.amazonaws.com/TestDatasets/example_input_mouse_spleen_1M.tar.gz) provided for convenience and continuity.
 
