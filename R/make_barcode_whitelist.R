@@ -56,7 +56,6 @@ make_barcode_whitelist <- function(dedup_map,coords_file,write_dir='.',n_cores=1
   # DEDUP MAP ==============================
   dedup <- readLines(dedup_map)
   # GENERATE MATCHES 
-  if (n_cores>1) {
     clusType <- if (Sys.info()['sysname']=='Windows') { 'PSOCK' } else { 'FORK' }
     cl <- parallel::makeCluster(n_cores,type=clusType)
     matchBCs <- parallel::parLapply(cl,dedup,function(x){
@@ -66,14 +65,6 @@ make_barcode_whitelist <- function(dedup_map,coords_file,write_dir='.',n_cores=1
       return(data.frame(dedup=x,match=d1))
     })
     parallel::stopCluster(cl)
-  } else {
-    matchBCs <- lapply(dedup,function(x){
-      bcs <- strsplit(x,',')[[1]]
-      d1 <- unique(unlist(lapply(bcs,do1delOR1sub)))
-      d1 <- setdiff(d1,puck$barcode)
-      return(data.frame(dedup=x,match=d1))
-    })
-  }
   matchBCs <- do.call(rbind,matchBCs)
   
   # DE-DUPLICATE
@@ -81,7 +72,6 @@ make_barcode_whitelist <- function(dedup_map,coords_file,write_dir='.',n_cores=1
   matchBCs <- matchBCs[!matchBCs$match %in% dups,]
   
   # COMBINE INTO CORRECT + dedup ROWS
-  if (n_cores>1) {
     clusType <- if (Sys.info()['sysname']=='Windows') { 'PSOCK' } else { 'FORK' }
     cl <- parallel::makeCluster(n_cores,type=clusType)
     rows <- parallel::parLapply(cl,dedup,function(x){
@@ -90,13 +80,7 @@ make_barcode_whitelist <- function(dedup_map,coords_file,write_dir='.',n_cores=1
       return(paste0(root,'\t',x,',',paste(froms,collapse=',')))
     })
     parallel::stopCluster(cl)
-  } else {
-    rows <- lapply(dedup,function(x){
-      froms <- matchBCs[matchBCs$dedup==x,'match']
-      root <- strsplit(x,',')[[1]][1]
-      return(paste0(root,'\t',x,',',paste(froms,collapse=',')))
-    })
-  }
+
   
   # WRITE FILE
   puck_name <- strsplit(dedup_map,'/')[[1]]
