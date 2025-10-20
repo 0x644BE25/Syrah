@@ -1,7 +1,17 @@
 # Syrah
 Syrah is an R package that provides read 1 error correction for [Slide-seqV2](https://www.nature.com/articles/s41587-020-0739-1) and [Curio Seeker](https://curiobioscience.com/seeker/) spatial transcriptomic data. 
 
-**NOTE:** This is the R package version of Syrah that only corrects the read 1 FASTQ and is intended for use in conjunction with a standard [Slide-seqV2](https://broadinstitute.github.io/warp/docs/Pipelines/SlideSeq_Pipeline/README) or Curio Seeker analysis pipeline. If you are looking for the standalone analysis pipeline, it is [here](https://github.com/0x644BE25/Syrah).
+**NOTE:** This is the R package version of Syrah that only corrects the read 1 FASTQ and is intended for use in conjunction with a standard [Slide-seqV2](https://broadinstitute.github.io/warp/docs/Pipelines/SlideSeq_Pipeline/README) or Curio Seeker analysis pipeline. If you are looking for the standalone analysis pipeline, it is [here](https://cran.r-project.org/).
+
+## Tutorial
+
+### Prerequisites
+
+If you do not have [R](https://r-project.org/) installed, simply use the [R installer](https://rstudio-education.github.io/hopr/starting.html) for your operating system: [Linux](https://cran.r-project.org/bin/linux/), [macOS](https://cran.r-project.org/bin/macosx/), or [Windows](https://cran.r-project.org/bin/windows/).
+
+Once R is installed, use the icon to open an R session and install the [devtools](https://cran.r-project.org/package=devtools) library follwed by Syrah by running
+```install.packages("devtools")```
+```devtools::install_github('0x644BE25/Syrah',force=TRUE)```
 
 ## Installation
 You will need to have [R](https://www.r-project.org/) and [devtools](https://www.rdocumentation.org/packages/devtools/versions/2.4.5) installed, then run
