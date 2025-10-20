@@ -14,15 +14,18 @@ Once R is installed, use the icon to open an R session and install the [devtools
 ```install.packages("devtools")```
 
 ### Installing Syrah
-In you R session, install Syrah with the command
+In your R session, install Syrah with the command
 
-```devtools::install_github('0x644BE25/Syrah',force=TRUE)```
+```devtools::install_github("0x644BE25/Syrah",force=TRUE)```
 
 and load the library with
 
 ```library("Syrah")```
 
 ### Downloading test data
+We have two test datasets available. To download the Slide-seqV2 test data, run
+
+```download.file("https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/example_input_mouse_spleen_1M.tar.gz","Curio.tar.gz")```
 
 
 ## Installation
