@@ -23,7 +23,7 @@ and load the library with
 ```library("Syrah")```
 
 ### Downloading test data
-We have [two test datasets available](## Test data). To download and unpack the Slide-seqV2 test data, run
+We have [two test datasets available](#test-data). To download and unpack the Slide-seqV2 test data, run
 
 ```
 download.file("https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/example_input_mouse_spleen_1M.tar.gz","SlideSeq.tar.gz")
@@ -112,7 +112,7 @@ This will output a corrected read 1 FASTQ with the same name as the original rea
 <details>
 <summary> Test data</summary>
   
-## Test data
+## [Test data](#test-data)
 
 The [Curio Seeker test data](https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/example_input_mouse_spleen_1M.tar.gz) and [Slide-seqV2 test data](https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/planarian_test_data.tar.gz) archive files contain FASTQ files downsampled to 1 million reads and the corresponding barcode/coordinates file. Simply unzip and un-tar the files. [Test data README](https://github.com/0x644BE25/Syrah/blob/main/test_data/README.txt)
 
