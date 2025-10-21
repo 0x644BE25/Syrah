@@ -37,8 +37,10 @@ To run Syrah on the test data, use the `syrah()` function and pass it the name o
 syrah(coords_file="planarian_L43430_coordinates.txt",r1_fastq="planarian_L43430_H5F73AFX2_1M_R1.fastq.gz")
 ```
 
-Once Syrah has finished running, simply use the corrected Read 1 FASTQ along with the original Read 2 FASTQ and barcode/coordinates file in your preferred Slide-seq or Curio Seeker analysis pipeline.
+**Youre done!** Once Syrah has finished running, simply use the corrected Read 1 FASTQ along with the original Read 2 FASTQ and barcode/coordinates file in your preferred Slide-seq or Curio Seeker analysis pipeline.
 
+&nbsp;
+&nbsp;
 ***
 &nbsp;
 &nbsp;
