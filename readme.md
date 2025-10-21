@@ -39,13 +39,17 @@ syrah(coords_file="planarian_L43430_coordinates.txt",r1_fastq="planarian_L43430_
 
 Once Syrah has finished running, simply use the corrected Read 1 FASTQ along with the original Read 2 FASTQ and barcode/coordinates file in your preferred Slide-seq or Curio Seeker analysis pipeline.
 
+***
+&nbsp;
+&nbsp;
+&nbsp;
+
 ## Installation
 You will need to have [R](https://www.r-project.org/) and [devtools](https://www.rdocumentation.org/packages/devtools/versions/2.4.5) installed, then run
 ```
 library(devtools)
 install_github("0x644BE25/Syrah")
 ```
-
 
 ## Inputs
 Syrah takes as input the tab-delimited bead coordinates file and the read 1 FASTQ file.
