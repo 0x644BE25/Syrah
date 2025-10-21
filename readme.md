@@ -26,7 +26,7 @@ and load the library with
 We have [two test datasets available](#test-data). To download and unpack the Slide-seqV2 test data, run
 
 ```
-download.file("https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/example_input_mouse_spleen_1M.tar.gz","SlideSeq.tar.gz")
+download.file("https://github.com/0x644BE25/Syrah/raw/refs/heads/main/test_data/planarian_test_data.tar.gz","SlideSeq.tar.gz")
 untar("SlideSeq.tar.gz")
 ```
 
@@ -34,7 +34,7 @@ untar("SlideSeq.tar.gz")
 To run Syrah on the test data, use the `syrah()` function and pass it the name of your coordinate/barcode and Read 1 FASTQ files:
 
 ```
-syrah(coords_file="A0010_039_BeadBarcodes.txt",r1_fastq="Mouse_spleen_1m_R1.fastq.gz")
+syrah(coords_file="planarian_L43430_coordinates.txt",r1_fastq="planarian_L43430_H5F73AFX2_1M_R1.fastq.gz")
 ```
 
 Once Syrah has finished running, simply use the corrected Read 1 FASTQ along with the original Read 2 FASTQ and barcode/coordinates file in your preferred Slide-seq or Curio Seeker analysis pipeline.
