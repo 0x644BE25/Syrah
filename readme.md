@@ -43,29 +43,6 @@ syrah(coords_file="planarian_L43430_coordinates.txt",r1_fastq="planarian_L43430_
 &nbsp;
 ***
 &nbsp;
-&nbsp;
-&nbsp;
-
-## Installation
-You will need to have [R](https://www.r-project.org/) and [devtools](https://www.rdocumentation.org/packages/devtools/versions/2.4.5) installed, then run
-```
-library(devtools)
-install_github("0x644BE25/Syrah")
-```
-
-## Inputs
-Syrah takes as input the tab-delimited bead coordinates file and the read 1 FASTQ file.
-
-## Basic Usage
-```
-library(Syrah)
-syrah(coords_file="coodinates_file.tsv", r1_fastq="read1_file.fastq")
-```
-
-## Output
-Syrah will output a bead deduplication map text file, a barcode whitelist file, and a corrected read 1 FASTQ with a filename ending in `.r1syrah`
-This corrected read 1 FASTQ can now be input into your spatial transcriptomic pipeline of choice along with the original read 2 FASTQ and coordinates file.
-
 
 <details>
   
