@@ -3,7 +3,7 @@ Syrah is an R package that provides read 1 error correction for [Slide-seqV2](ht
 
 **NOTE:** This is the R package version of Syrah that only corrects the read 1 FASTQ and is intended for use in conjunction with a standard [Slide-seqV2](https://broadinstitute.github.io/warp/docs/Pipelines/SlideSeq_Pipeline/README) or Curio Seeker analysis pipeline. If you are looking for the standalone analysis pipeline, it is [here](https://cran.r-project.org/).
 
-## Tutorial
+## Tutorial/quick-start guide
 
 ### Prerequisites
 
