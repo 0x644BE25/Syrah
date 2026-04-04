@@ -9,14 +9,14 @@ Syrah is an R package that provides read 1 error correction for [Slide-seqV2](ht
 
 If you do not have [R](https://r-project.org/) installed, simply use the [R installer](https://rstudio-education.github.io/hopr/starting.html) for your operating system: [Linux](https://cran.r-project.org/bin/linux/), [macOS](https://cran.r-project.org/bin/macosx/), or [Windows](https://cran.r-project.org/bin/windows/).
 
-Once R is installed, use the icon to open an R session and install the [devtools](https://cran.r-project.org/package=devtools) library by running
+Once R is installed, use the icon to open an R session. You will need to install Syrah from GitHub unsing something like `devtools` or `pak`. If you don't already have a way to do this, install the [pak](https://pak.r-lib.org/reference/get-started.html) library by running
 
-```install.packages("devtools")```
+```install.packages("pak")```
 
 ### Installing Syrah
 In your R session, install Syrah with the command
 
-```devtools::install_github("0x644BE25/Syrah",force=TRUE)```
+```pak::pkg_install("0x644BE25/Syrah")```
 
 and load the library with
 
