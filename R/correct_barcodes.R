@@ -1,16 +1,15 @@
-#' Make barcode whitelist
+#' Correct read1 FASTQ barcodes
 #'
-#' Use bead deduplication map to generate a whitelist of all acceptable + non-ambiguous barcode matches.
+#' Use bead barcode whitelist to read in and correct read1 FASTQ barcodes.
 #' @param whitelist path to a bead dedupliction map, as created by make_barcode_whitelist()
 #' @param r1_fastq path to a read 1 fastq file -- may be comma delimited list of fastqs from same puck/library
 #' @param write_dir (optional) directory to write to, defaults to current directory
-#' @param n_cores (optional) integer indicating number of cores for parallelization, defaults to 1
 #' @param max_linker_dels (optional) integer for max acceptable deletions in linker, defaults to 5
-#' @param batch_size (optional) integer determining number of reads per batch, defaults to 10^5
+#' @param batch_size (optional) number of reads to process at once, adjust to suit your hardware, defaults to 10^5
 #' @return none
 #' @examples
-#' make_barcode_whtielist(dedup_map='coordinates.tsv_deduplication_map.txt')
-#' make_barcode_whtielist(dedup_map='coordinates.tsv_deduplication_map.txt',write_dir='~/mydir/',n_cores=12)
+#' correct_barcodes(whitelist='whitelist.txt',r1_fastq='R1.fastq')
+#' correct_barcodes(whitelist='whitelist.txt',r1_fastq='R1.fastq',write_dir='./outputs/',max_linker_dels=3)
 #' @export
 correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,batch_size=10^5) {
   
@@ -21,32 +20,29 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
  # PARAMS ==================================
   nts <- c('A','C','G','T')
   
-  # computational parameters
-  batchSize <- 10^5
-  
   # linker matching parameters
   linker <- 'TCTTCAGCGTTCCCGAGA'
   maxSubs <- 1
   maxLinkerDels <- max_linker_dels
-
+  
   # barcode matching
   bcPart1length <- 8
   bcPart2start <- bcPart1length+1
   bcLength <- 14
   r1bc2end <- bcLength+nchar(linker)
-  
+
   # STRING METHODS =========================
   del1 <- function(seq,pos=1:nchar(seq)) {
     seq2 <- strsplit(seq,'')[[1]]
-    return(sapply(pos,function(i){
+    return(sapply(pos,\(i){
       paste0(seq2[-i],collapse='')
     }))
   }
   
   sub1 <- function(seq,pos=1:nchar(seq),nts=c('A','C','G','T')) {
     seq2 <- strsplit(seq,'')[[1]]
-    return(c(sapply(pos,function(i){
-      sapply(nts,function(nt){
+    return(c(sapply(pos,\(i){
+      sapply(nts,\(nt){
         curr <- seq2; curr[i] <- nt; paste0(curr,collapse='')
       })
     })))
@@ -79,7 +75,7 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   linkerMatches <- doMaxNdelMsub(linker,maxLinkerDels,maxSubs,nts=c('A','C','G','T','N'))
   
   # BARCODE MATCHES ========================
-  barcodes <- unlist(lapply(readLines(whitelist),function(x){
+  barcodes <- unlist(lapply(readLines(whitelist)[1:1000],\(x){
     x <- strsplit(x,'\t')[[1]]
     froms <- strsplit(x[2],',')[[1]]
     res <- setNames(rep(x[1],length(froms)),froms)
@@ -93,7 +89,7 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
                bc2start=(bcPart1length+nchar(linker)+1),
                bc2end=r1bc2end)
   coeff <- c(0,0,1,1,1)
-  r1coords <- do.call(rbind,lapply(0:maxLinkerDels,function(dels){
+  r1coords <- do.call(rbind,lapply(0:maxLinkerDels,\(dels){
     rbind(basepos-(coeff*dels),
           (basepos-1)-(coeff*dels))
   }))
@@ -106,6 +102,8 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   # FILEPATHS ==============================
   out_file <- strsplit(r1_fq,'/')[[1]]
   out_file <- out_file[length(out_file)]
+  is_gz <- FALSE
+  if (endsWith(out_file,'.gz')) { out_file <- gsub('.gz','',out_file); is_gz <- TRUE }
   out_file <- paste0(write_dir,out_file,'.r1syrah')
   if (file.exists(out_file)) { file.rename(out_file,paste0(out_file,'.OLD')) }
   
@@ -119,7 +117,7 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   # BUT THE VECTORIZATION MAKES IT SO FAST
   # CONSIDER AVERTING YOUR EYES
   repeat({
-    r1s <- readLines(conR1,n=batchSize*4)
+    r1s <- readLines(conR1,n=batch_size*4)
     if (length(r1s)==0) { break() }
     id_ind <- seq(1,length(r1s),by=4)
     r1seqs <- r1s[id_ind+1]
@@ -146,9 +144,10 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
     
     totalReads <- totalReads+length(r1seqs)
     if (totalReads%%(10^6)==0) { cat('  ',format(as.POSIXlt(Sys.time())),' ',totalReads,'reads processed\n') }
-    if (length(r1seqs)<batchSize) { break() }
+    if (length(r1seqs)<batch_size) { break() }
   })
   closeAllConnections()
+  if (is_gz) { system(paste0('gzip ',out_file)); out_file <- paste0(out_file,'.gz') }
   cat('\nCorrected read 1 fastq written to',out_file,'\n')
   }
 }
