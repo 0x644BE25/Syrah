@@ -75,7 +75,7 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   linkerMatches <- doMaxNdelMsub(linker,maxLinkerDels,maxSubs,nts=c('A','C','G','T','N'))
   
   # BARCODE MATCHES ========================
-  barcodes <- unlist(lapply(readLines(whitelist)[1:1000],\(x){
+  barcodes <- unlist(lapply(readLines(whitelist),\(x){
     x <- strsplit(x,'\t')[[1]]
     froms <- strsplit(x[2],',')[[1]]
     res <- setNames(rep(x[1],length(froms)),froms)
