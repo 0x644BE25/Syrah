@@ -148,7 +148,7 @@ correct_barcodes <- function(whitelist,r1_fastq,write_dir='.',max_linker_dels=5,
   })
   closeAllConnections()
   if (is_gz) { 
-    if (file.exists(paste0(out_file,'.gz'))) { file.rename(paste0(out_file,'.gz'),paste0(out_file,'.gz.OLD'))) }
+    if (file.exists(paste0(out_file,'.gz'))) { file.rename(paste0(out_file,'.gz'),paste0(out_file,'.gz.OLD')) }
     system(paste0('gzip ',out_file)); out_file <- paste0(out_file,'.gz') 
     }
   cat('\nCorrected read 1 fastq written to',out_file,'\n')
