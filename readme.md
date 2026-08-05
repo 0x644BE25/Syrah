@@ -1,5 +1,5 @@
 # Syrah
-Syrah is an R package that provides read 1 error correction for [Slide-seqV2](https://www.nature.com/articles/s41587-020-0739-1) and [Curio Seeker](https://curiobioscience.com/seeker/) spatial transcriptomic data [(Brewster et al., 2026)](http://https://academic.oup.com/g3journal/advance-article/doi/10.1093/g3journal/jkag107/8667091).
+Syrah is an R package that provides read 1 error correction for [Slide-seqV2](https://www.nature.com/articles/s41587-020-0739-1) and [Curio Seeker](https://curiobioscience.com/seeker/) spatial transcriptomic data [(Brewster et al., 2026)](http://https://academic.oup.com/g3journal/advance-article/doi/10.1093/g3journal/jkag107/8667091). [![DOI](https://zenodo.org/badge/384210621.svg)](https://doi.org/10.5281/zenodo.21799076)
 
 **NOTE:** This is the R package version of Syrah that only corrects the read 1 FASTQ and is intended for use in conjunction with a standard [Slide-seqV2](https://broadinstitute.github.io/warp/docs/Pipelines/SlideSeq_Pipeline/README) or Curio Seeker analysis pipeline. If you are looking for the standalone analysis pipeline, it is [here](https://github.com/0x644BE25/Syrah/releases/tag/v2.0.0-alpha).
 
